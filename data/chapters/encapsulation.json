@@ -10,8 +10,13 @@
         "paragraphs": [
           "클래스를 사용하다 보면 어떤 코드는 외부에서 자유롭게 사용할 수 있어야 하고, 어떤 데이터는 외부에서 함부로 바꾸지 못하도록 제한해야 한다. 접근 제어자는 이러한 공개 범위를 정하는 문법이다. 객체가 가진 필드와 메서드가 어디에서 접근 가능한지를 정리하면 코드의 사용 방법이 명확해지고, 잘못된 접근으로 인한 오류를 줄일 수 있다.",
           "예를 들어 은행 계좌 객체에 잔액 필드가 있다고 하자. 잔액은 중요한 데이터이므로 외부 코드가 직접 `balance = -10000`처럼 바꾸게 두면 안 된다. 입금과 출금이라는 정해진 절차를 통해서만 값이 바뀌어야 한다. 접근 제어자는 이런 구조를 만들기 위한 기본 문법이다.",
-          "```java\nclass Account {\n    int balance;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Account account = new Account();\n        account.balance = -10000;\n        System.out.println(account.balance);\n    }\n}\n```",
           "위 코드는 문법적으로는 가능할 수 있지만 설계상 위험하다. 계좌 잔액이 음수가 되는 상황을 아무런 검증 없이 허용하기 때문이다. 접근 제어자와 캡슐화를 사용하면 이런 잘못된 값 변경을 막을 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "접근 제어자가 필요한 이유 예제",
+            "code": "class Account {\n    int balance;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Account account = new Account();\n        account.balance = -10000;\n        System.out.println(account.balance);\n    }\n}"
+          }
         ]
       },
       {
@@ -19,8 +24,13 @@
         "paragraphs": [
           "캡슐화는 객체 내부의 데이터를 외부에서 직접 다루지 못하게 하고, 정해진 메서드를 통해서만 접근하도록 만드는 객체 지향 설계 원칙이다. Java에서는 보통 필드를 `private`으로 감추고, 필요한 기능을 `public` 메서드로 제공하는 방식으로 캡슐화를 구현한다.",
           "캡슐화의 핵심은 단순히 필드를 숨기는 것이 아니라, 객체가 자신의 데이터를 스스로 관리하도록 만드는 데 있다. 외부 코드는 객체의 내부 구조를 자세히 알 필요 없이 공개된 메서드만 사용하면 된다. 이렇게 하면 내부 구현을 나중에 바꾸더라도 외부 코드에 미치는 영향을 줄일 수 있다.",
-          "```java\nclass Account {\n    private int balance;\n\n    public void deposit(int amount) {\n        if (amount > 0) {\n            balance += amount;\n        }\n    }\n\n    public int getBalance() {\n        return balance;\n    }\n}\n```",
           "이 코드에서는 `balance`를 외부에서 직접 수정할 수 없다. 대신 `deposit()` 메서드를 통해서만 입금할 수 있고, 이 메서드 안에서 금액이 0보다 큰지 검사한다. 이처럼 캡슐화는 데이터 보호와 검증 로직을 함께 묶는 역할을 한다."
+        ],
+        "codeExamples": [
+          {
+            "title": "캡슐화의 의미 예제",
+            "code": "class Account {\n    private int balance;\n\n    public void deposit(int amount) {\n        if (amount > 0) {\n            balance += amount;\n        }\n    }\n\n    public int getBalance() {\n        return balance;\n    }\n}"
+          }
         ]
       },
       {
@@ -28,8 +38,13 @@
         "paragraphs": [
           "`public`은 가장 넓은 접근 범위를 제공하는 접근 제어자다. `public`으로 선언된 클래스, 필드, 메서드는 다른 클래스에서도 접근할 수 있다. 외부에서 반드시 사용해야 하는 기능은 `public`으로 제공하는 경우가 많다.",
           "그러나 모든 것을 `public`으로 열어 두면 객체의 내부 데이터가 무분별하게 변경될 수 있다. 특히 필드를 `public`으로 선언하면 외부 코드가 값을 직접 읽고 쓸 수 있으므로 검증 로직을 적용하기 어렵다. 따라서 일반적으로 필드는 `private`으로 두고, 필요한 메서드만 `public`으로 공개한다.",
-          "```java\nclass Student {\n    public String name;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student student = new Student();\n        student.name = \"Kim\";\n        System.out.println(student.name);\n    }\n}\n```",
           "위 코드는 `name` 필드가 `public`이므로 외부에서 직접 접근할 수 있다. 간단한 예제에서는 문제가 없어 보일 수 있지만, 실제 프로그램에서는 값의 검증이나 변경 이력을 관리하기 어렵기 때문에 필드를 직접 공개하는 방식은 신중하게 사용해야 한다."
+        ],
+        "codeExamples": [
+          {
+            "title": "public 접근 제어자 예제",
+            "code": "class Student {\n    public String name;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student student = new Student();\n        student.name = \"Kim\";\n        System.out.println(student.name);\n    }\n}"
+          }
         ]
       },
       {
@@ -37,8 +52,13 @@
         "paragraphs": [
           "`private`은 가장 제한적인 접근 제어자다. `private`으로 선언된 필드나 메서드는 같은 클래스 내부에서만 접근할 수 있다. 객체의 내부 상태를 보호하려면 필드를 `private`으로 선언하는 것이 일반적이다.",
           "`private` 필드는 외부에서 직접 읽거나 쓸 수 없다. 따라서 외부 코드가 값을 사용해야 한다면 클래스 안에 값을 반환하는 메서드를 제공해야 한다. 또한 값을 변경해야 한다면 검증 로직이 포함된 메서드를 제공할 수 있다.",
-          "```java\nclass Student {\n    private int score;\n\n    public void setScore(int score) {\n        if (score >= 0 && score <= 100) {\n            this.score = score;\n        }\n    }\n\n    public int getScore() {\n        return score;\n    }\n}\n```",
           "이 예제에서 `score`는 `private`이므로 외부에서 직접 변경할 수 없다. `setScore()` 메서드는 0 이상 100 이하인 경우에만 점수를 저장한다. 이 구조는 잘못된 점수가 객체 내부에 저장되는 것을 막는다."
+        ],
+        "codeExamples": [
+          {
+            "title": "private 접근 제어자 예제",
+            "code": "class Student {\n    private int score;\n\n    public void setScore(int score) {\n        if (score >= 0 && score <= 100) {\n            this.score = score;\n        }\n    }\n\n    public int getScore() {\n        return score;\n    }\n}"
+          }
         ]
       },
       {
@@ -46,8 +66,13 @@
         "paragraphs": [
           "Java에서 접근 제어자를 명시하지 않으면 default 접근 범위가 적용된다. default는 같은 패키지 안에서는 접근할 수 있지만 다른 패키지에서는 접근할 수 없다. 여기서 default는 `default`라는 키워드를 쓰는 것이 아니라 접근 제어자를 생략한 상태를 의미한다.",
           "초기 학습 단계에서는 default 접근 범위보다 `public`과 `private`의 차이를 먼저 이해하는 것이 중요하다. 다만 클래스나 필드 앞에 아무 접근 제어자도 없을 때도 접근 범위가 존재한다는 점은 알아야 한다.",
-          "```java\nclass Member {\n    String name;\n\n    void printName() {\n        System.out.println(name);\n    }\n}\n```",
           "위 코드에서 `Member` 클래스, `name` 필드, `printName()` 메서드는 접근 제어자가 명시되어 있지 않다. 이 경우 같은 패키지 안에서는 접근할 수 있지만, 다른 패키지에서는 접근이 제한될 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "default 접근 범위 예제",
+            "code": "class Member {\n    String name;\n\n    void printName() {\n        System.out.println(name);\n    }\n}"
+          }
         ]
       },
       {
@@ -55,8 +80,13 @@
         "paragraphs": [
           "`protected`는 같은 패키지 안에서 접근할 수 있고, 다른 패키지라도 상속 관계의 자식 클래스에서는 접근할 수 있는 접근 제어자다. 이 개념은 상속을 배운 뒤 더 명확하게 이해할 수 있다.",
           "개요 수준에서는 `protected`가 `private`보다는 넓고 `public`보다는 좁은 접근 범위를 가진다고 이해하면 된다. 상속 관계에서 부모 클래스의 일부 멤버를 자식 클래스에게 허용할 때 사용한다.",
-          "```java\nclass Parent {\n    protected String message = \"부모 클래스의 protected 필드\";\n}\n\nclass Child extends Parent {\n    void printMessage() {\n        System.out.println(message);\n    }\n}\n```",
           "위 예제에서 `Child` 클래스는 `Parent`를 상속받았기 때문에 `protected` 필드인 `message`에 접근할 수 있다. 다만 `protected`는 상속과 패키지 개념이 함께 관련되므로, 무조건 외부 공개용으로 사용하는 것은 적절하지 않다."
+        ],
+        "codeExamples": [
+          {
+            "title": "protected 접근 제어자 예제",
+            "code": "class Parent {\n    protected String message = \"부모 클래스의 protected 필드\";\n}\n\nclass Child extends Parent {\n    void printMessage() {\n        System.out.println(message);\n    }\n}"
+          }
         ]
       },
       {
@@ -64,8 +94,13 @@
         "paragraphs": [
           "접근 제어자는 공개 범위에 따라 구분된다. 일반적으로 `public`은 가장 넓고, `private`은 가장 좁다. default와 `protected`는 패키지와 상속 관계에 따라 접근 가능 여부가 달라진다.",
           "범위를 단순하게 정리하면 `public`은 어디서나 접근 가능하고, `private`은 같은 클래스 내부에서만 접근 가능하다. default는 같은 패키지 안에서 접근 가능하며, `protected`는 같은 패키지와 상속받은 클래스에서 접근 가능하다. 이 범위 비교는 캡슐화 설계의 기준이 된다.",
-          "```java\npublic class AccessExample {\n    public int publicValue;\n    private int privateValue;\n    protected int protectedValue;\n    int defaultValue;\n}\n```",
           "위 코드처럼 한 클래스 안에 여러 접근 제어자를 사용할 수 있다. 하지만 실제 설계에서는 필드는 대부분 `private`으로 두고, 외부에 필요한 기능만 `public` 메서드로 제공하는 방식이 많이 사용된다."
+        ],
+        "codeExamples": [
+          {
+            "title": "접근 제어자의 범위 비교 예제",
+            "code": "public class AccessExample {\n    public int publicValue;\n    private int privateValue;\n    protected int protectedValue;\n    int defaultValue;\n}"
+          }
         ]
       },
       {
@@ -73,8 +108,13 @@
         "paragraphs": [
           "필드를 `private`으로 선언하는 가장 큰 이유는 외부에서 객체의 상태를 함부로 바꾸지 못하게 하기 위해서다. 객체의 상태는 프로그램의 동작 결과에 직접 영향을 주기 때문에, 잘못된 값이 저장되면 이후 로직 전체가 잘못될 수 있다.",
           "예를 들어 회원의 나이는 음수가 될 수 없고, 시험 점수는 일반적으로 0점에서 100점 사이여야 한다. 필드가 공개되어 있으면 이런 규칙을 외부 코드가 지키도록 기대해야 하지만, `private` 필드와 메서드를 사용하면 클래스 내부에서 직접 검증할 수 있다.",
-          "```java\nclass User {\n    private int age;\n\n    public void setAge(int age) {\n        if (age >= 0) {\n            this.age = age;\n        }\n    }\n}\n```",
           "`setAge()` 메서드는 음수 나이를 저장하지 않도록 검사한다. 이처럼 필드를 `private`으로 감추고 메서드로 변경 절차를 제한하면 객체의 상태를 더 안전하게 유지할 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "필드를 private으로 선언하는 이유 예제",
+            "code": "class User {\n    private int age;\n\n    public void setAge(int age) {\n        if (age >= 0) {\n            this.age = age;\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -82,8 +122,13 @@
         "paragraphs": [
           "getter는 `private` 필드의 값을 외부에서 읽을 수 있도록 제공하는 메서드다. 필드를 직접 공개하지 않으면서도 필요한 값을 조회할 수 있게 한다. 보통 메서드 이름은 `get필드명` 형태로 작성한다.",
           "getter는 단순히 값을 반환하는 역할만 하는 것처럼 보이지만, 객체의 내부 표현을 외부에 직접 노출하지 않는다는 점에서 중요하다. 나중에 내부 필드 구조가 바뀌더라도 getter의 반환 방식만 유지하면 외부 코드는 큰 수정 없이 사용할 수 있다.",
-          "```java\nclass Product {\n    private int price;\n\n    public int getPrice() {\n        return price;\n    }\n}\n```",
           "위 코드에서 `price`는 `private`이므로 외부에서 직접 접근할 수 없다. 대신 `getPrice()`를 호출하여 가격을 읽을 수 있다. 이처럼 getter는 읽기 접근을 통제하는 통로다."
+        ],
+        "codeExamples": [
+          {
+            "title": "getter의 역할 예제",
+            "code": "class Product {\n    private int price;\n\n    public int getPrice() {\n        return price;\n    }\n}"
+          }
         ]
       },
       {
@@ -91,8 +136,13 @@
         "paragraphs": [
           "setter는 `private` 필드의 값을 변경할 수 있도록 제공하는 메서드다. 보통 메서드 이름은 `set필드명` 형태로 작성한다. setter의 중요한 역할은 단순 대입이 아니라 값이 올바른지 검사한 뒤 저장하는 것이다.",
           "setter를 사용하면 잘못된 값이 객체 내부로 들어오는 것을 막을 수 있다. 예를 들어 가격은 음수가 되면 안 되고, 수량도 음수가 되면 안 된다. 이러한 조건을 setter 안에 넣으면 객체가 스스로 상태를 보호할 수 있다.",
-          "```java\nclass Product {\n    private int price;\n\n    public void setPrice(int price) {\n        if (price >= 0) {\n            this.price = price;\n        }\n    }\n}\n```",
           "이 코드에서 `setPrice()`는 0 이상의 가격만 저장한다. 외부 코드가 음수 값을 전달하더라도 필드가 직접 공개되어 있지 않기 때문에 잘못된 값 저장을 막을 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "setter의 역할 예제",
+            "code": "class Product {\n    private int price;\n\n    public void setPrice(int price) {\n        if (price >= 0) {\n            this.price = price;\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -100,8 +150,13 @@
         "paragraphs": [
           "`this`는 현재 객체 자신을 가리키는 키워드다. 필드 이름과 매개변수 이름이 같을 때 `this.필드명`을 사용하면 현재 객체의 필드를 명확하게 가리킬 수 있다.",
           "setter나 생성자에서는 매개변수 이름을 필드 이름과 같게 작성하는 경우가 많다. 이때 `this.name = name;`에서 왼쪽의 `this.name`은 객체의 필드이고, 오른쪽의 `name`은 매개변수다. `this`를 사용하면 어떤 값이 필드이고 어떤 값이 매개변수인지 분명해진다.",
-          "```java\nclass Student {\n    private String name;\n\n    public void setName(String name) {\n        this.name = name;\n    }\n}\n```",
           "위 예제에서 `this.name`은 `Student` 객체가 가진 필드이고, `name`은 `setName()` 메서드로 전달된 매개변수다. 캡슐화 단원에서는 setter와 함께 `this` 사용을 자주 보게 된다."
+        ],
+        "codeExamples": [
+          {
+            "title": "this 키워드와 필드 구분 예제",
+            "code": "class Student {\n    private String name;\n\n    public void setName(String name) {\n        this.name = name;\n    }\n}"
+          }
         ]
       },
       {
@@ -109,8 +164,13 @@
         "paragraphs": [
           "필드를 `private`으로 선언한다고 해서 모든 필드에 getter와 setter를 반드시 만들어야 하는 것은 아니다. 외부에서 읽을 필요가 없는 값에는 getter를 만들지 않을 수 있고, 외부에서 변경하면 안 되는 값에는 setter를 만들지 않을 수 있다.",
           "예를 들어 계좌 잔액은 조회는 가능하지만 외부에서 임의로 설정하면 안 된다. 이 경우 `getBalance()`는 제공하되 `setBalance()`는 제공하지 않고, `deposit()`과 `withdraw()` 같은 메서드를 통해서만 잔액을 바꾸는 것이 더 안전하다.",
-          "```java\nclass Account {\n    private int balance;\n\n    public int getBalance() {\n        return balance;\n    }\n\n    public void deposit(int amount) {\n        if (amount > 0) {\n            balance += amount;\n        }\n    }\n}\n```",
           "이 구조에서는 외부 코드가 잔액을 직접 설정할 수 없다. 잔액 변경은 입금 같은 의미 있는 동작을 통해서만 이루어진다. 이것이 캡슐화의 중요한 설계 관점이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "getter와 setter를 무조건 만드는 것은 아님 예제",
+            "code": "class Account {\n    private int balance;\n\n    public int getBalance() {\n        return balance;\n    }\n\n    public void deposit(int amount) {\n        if (amount > 0) {\n            balance += amount;\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -118,8 +178,13 @@
         "paragraphs": [
           "캡슐화는 유효성 검사와 함께 사용할 때 효과가 커진다. 유효성 검사는 저장하려는 값이 객체의 규칙에 맞는지 확인하는 과정이다. 점수는 0부터 100 사이, 나이는 0 이상, 이름은 비어 있지 않아야 한다는 조건이 예가 될 수 있다.",
           "필드가 공개되어 있으면 외부 코드가 이런 규칙을 무시하고 값을 직접 넣을 수 있다. 반면 필드를 `private`으로 두고 setter나 별도 메서드에서 검증하면 잘못된 값을 막을 수 있다.",
-          "```java\nclass Member {\n    private String name;\n\n    public void setName(String name) {\n        if (name != null && !name.isBlank()) {\n            this.name = name;\n        }\n    }\n}\n```",
           "위 코드에서는 이름이 `null`이 아니고 공백 문자열도 아닐 때만 저장한다. 이처럼 캡슐화는 단순한 접근 제한이 아니라 객체의 상태를 올바르게 유지하는 설계 방식이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "유효성 검사와 캡슐화 예제",
+            "code": "class Member {\n    private String name;\n\n    public void setName(String name) {\n        if (name != null && !name.isBlank()) {\n            this.name = name;\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -127,8 +192,13 @@
         "paragraphs": [
           "정보 은닉은 객체의 내부 구현 세부 사항을 외부에 드러내지 않는다는 개념이다. 캡슐화는 정보 은닉을 구현하는 대표적인 방법이다. 외부에서는 객체가 제공하는 public 메서드만 사용하고, 내부 필드나 처리 방식은 알 필요가 없다.",
           "정보 은닉을 적용하면 내부 구현을 변경하기 쉬워진다. 예를 들어 필드 이름이나 저장 방식을 바꾸더라도 public 메서드의 사용 방식이 그대로라면 외부 코드는 크게 영향을 받지 않는다. 이것은 유지보수에 매우 중요하다.",
-          "```java\nclass Temperature {\n    private double celsius;\n\n    public double getCelsius() {\n        return celsius;\n    }\n\n    public void setCelsius(double celsius) {\n        this.celsius = celsius;\n    }\n}\n```",
           "외부 코드는 `getCelsius()`와 `setCelsius()`만 사용한다. 내부 필드명이 바뀌거나 온도 변환 로직이 추가되더라도 메서드 사용 방식이 유지되면 외부 코드의 변경을 줄일 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "정보 은닉과 캡슐화의 관계 예제",
+            "code": "class Temperature {\n    private double celsius;\n\n    public double getCelsius() {\n        return celsius;\n    }\n\n    public void setCelsius(double celsius) {\n        this.celsius = celsius;\n    }\n}"
+          }
         ]
       },
       {
@@ -136,8 +206,13 @@
         "paragraphs": [
           "캡슐화를 더 강하게 적용하면 객체 생성 후 상태가 바뀌지 않는 구조를 만들 수 있다. 이러한 객체를 불변 객체라고 한다. 개요 수준에서는 모든 불변 객체 설계를 자세히 다루지는 않지만, setter를 제공하지 않으면 외부에서 값을 변경하기 어렵다는 점을 이해할 수 있다.",
           "예를 들어 이름과 생년월일처럼 생성 후 쉽게 바뀌지 않는 값은 생성자에서 한 번 초기화하고 getter만 제공할 수 있다. 이렇게 하면 객체의 상태가 예상치 못하게 변경되는 일을 줄일 수 있다.",
-          "```java\nclass Person {\n    private String name;\n\n    public Person(String name) {\n        this.name = name;\n    }\n\n    public String getName() {\n        return name;\n    }\n}\n```",
           "이 코드에는 `setName()`이 없다. 따라서 객체 생성 후 외부에서 이름을 변경할 수 없다. setter를 만들지 않는 것도 캡슐화 설계의 한 방법이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "불변 객체의 기초 예제",
+            "code": "class Person {\n    private String name;\n\n    public Person(String name) {\n        this.name = name;\n    }\n\n    public String getName() {\n        return name;\n    }\n}"
+          }
         ]
       },
       {
@@ -145,8 +220,13 @@
         "paragraphs": [
           "캡슐화된 클래스는 단순히 값을 읽고 쓰는 getter/setter만 제공하는 것이 아니라, 객체의 역할에 맞는 의미 있는 동작을 제공해야 한다. 계좌 객체라면 `setBalance()`보다 `deposit()`과 `withdraw()`가 더 적절한 메서드일 수 있다.",
           "의미 있는 메서드는 내부 필드를 변경하더라도 변경 이유와 절차를 분명하게 한다. 출금 메서드에서는 출금 금액이 0보다 큰지, 잔액이 충분한지 검사할 수 있다. 이처럼 동작 중심으로 메서드를 설계하면 객체의 책임이 명확해진다.",
-          "```java\nclass Account {\n    private int balance;\n\n    public void withdraw(int amount) {\n        if (amount > 0 && balance >= amount) {\n            balance -= amount;\n        }\n    }\n}\n```",
           "`withdraw()`는 잔액을 직접 빼는 것이 아니라 출금이라는 의미 있는 동작을 표현한다. 이 메서드 안에 검증 조건을 넣으면 계좌 객체가 스스로 자신의 상태를 관리할 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "메서드로 의미 있는 동작 제공하기 예제",
+            "code": "class Account {\n    private int balance;\n\n    public void withdraw(int amount) {\n        if (amount > 0 && balance >= amount) {\n            balance -= amount;\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -154,8 +234,13 @@
         "paragraphs": [
           "`private` 필드는 외부 클래스에서 직접 접근할 수 없지만, 같은 클래스 내부에서는 자유롭게 접근할 수 있다. getter와 setter도 결국 같은 클래스 내부에서 `private` 필드를 읽고 쓰는 메서드다.",
           "이 점을 이해하면 `private`이 값을 완전히 사용할 수 없게 만드는 것이 아니라 외부 접근을 통제하는 장치라는 것을 알 수 있다. 객체 내부의 메서드는 자신의 필드를 사용하여 계산하거나 상태를 변경할 수 있다.",
-          "```java\nclass Score {\n    private int korean;\n    private int english;\n\n    public int getTotal() {\n        return korean + english;\n    }\n}\n```",
           "`getTotal()` 메서드는 같은 클래스 내부에 있으므로 `private` 필드인 `korean`과 `english`에 접근할 수 있다. 외부에서는 두 필드에 직접 접근하지 못하고, 공개된 메서드를 통해 계산 결과만 받을 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "클래스 내부에서는 private 필드 접근 가능 예제",
+            "code": "class Score {\n    private int korean;\n    private int english;\n\n    public int getTotal() {\n        return korean + english;\n    }\n}"
+          }
         ]
       },
       {
@@ -163,8 +248,13 @@
         "paragraphs": [
           "접근 제어자를 잘못 이해하면 컴파일 오류가 발생할 수 있다. 예를 들어 다른 클래스에서 `private` 필드에 직접 접근하려고 하면 컴파일러가 접근할 수 없다는 오류를 발생시킨다. 이것은 Java가 접근 범위를 엄격하게 검사하기 때문이다.",
           "이 오류는 나쁜 것이 아니라 객체의 내부 상태를 보호하기 위한 장치다. 외부에서 필요한 값이 있다면 클래스가 제공하는 public 메서드를 사용해야 한다.",
-          "```java\nclass Student {\n    private String name;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student student = new Student();\n        // student.name = \"Kim\"; // private 필드이므로 외부에서 직접 접근할 수 없다.\n    }\n}\n```",
           "위 코드에서 주석 처리된 줄을 실행 코드로 바꾸면 컴파일 오류가 발생한다. 올바른 접근을 위해서는 `setName()` 같은 public 메서드를 클래스 안에 제공해야 한다."
+        ],
+        "codeExamples": [
+          {
+            "title": "접근 제어자와 컴파일 오류 예제",
+            "code": "class Student {\n    private String name;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student student = new Student();\n        // student.name = \"Kim\"; // private 필드이므로 외부에서 직접 접근할 수 없다.\n    }\n}"
+          }
         ]
       },
       {
@@ -172,8 +262,13 @@
         "paragraphs": [
           "캡슐화는 유지보수성을 높이는 데 중요한 역할을 한다. 외부 코드가 클래스의 필드에 직접 의존하면 내부 구조를 바꾸기가 어렵다. 필드 이름을 바꾸거나 검증 로직을 추가하려면 여러 외부 코드를 함께 수정해야 할 수 있다.",
           "반대로 외부 코드가 public 메서드에만 의존하면 내부 필드 구조를 변경해도 메서드 사용 방식만 유지하면 된다. 이것은 프로그램 규모가 커질수록 큰 장점이 된다.",
-          "```java\nclass Product {\n    private int price;\n\n    public int getPrice() {\n        return price;\n    }\n}\n```",
           "외부 코드는 `getPrice()`만 사용한다. 나중에 가격을 세금 포함 가격으로 계산하도록 내부 구현을 바꾸더라도 메서드 이름과 반환 의미를 유지하면 외부 코드를 크게 바꾸지 않아도 된다."
+        ],
+        "codeExamples": [
+          {
+            "title": "캡슐화와 유지보수 예제",
+            "code": "class Product {\n    private int price;\n\n    public int getPrice() {\n        return price;\n    }\n}"
+          }
         ]
       },
       {
@@ -181,8 +276,13 @@
         "paragraphs": [
           "캡슐화 설계의 기본 원칙은 필드는 숨기고, 필요한 기능은 메서드로 공개하는 것이다. 필드를 `private`으로 선언하고, 외부에서 필요한 동작만 `public` 메서드로 제공하면 객체의 사용 방법이 명확해진다.",
           "모든 값을 무조건 getter와 setter로 열어 두는 것은 좋은 캡슐화가 아닐 수 있다. 어떤 값은 읽기만 가능해야 하고, 어떤 값은 특정 조건에서만 변경되어야 하며, 어떤 값은 외부에 공개할 필요가 없을 수 있다. 중요한 것은 객체의 역할과 데이터 보호 기준에 맞게 접근 범위를 결정하는 것이다.",
-          "```java\nclass Order {\n    private int quantity;\n\n    public void changeQuantity(int quantity) {\n        if (quantity > 0) {\n            this.quantity = quantity;\n        }\n    }\n\n    public int getQuantity() {\n        return quantity;\n    }\n}\n```",
           "`changeQuantity()`는 단순 setter보다 의미가 분명하다. 주문 수량을 변경한다는 동작을 표현하면서, 0보다 큰 수량만 허용한다. 이런 방식이 캡슐화 설계에 더 적합하다."
+        ],
+        "codeExamples": [
+          {
+            "title": "캡슐화 설계의 기본 원칙 예제",
+            "code": "class Order {\n    private int quantity;\n\n    public void changeQuantity(int quantity) {\n        if (quantity > 0) {\n            this.quantity = quantity;\n        }\n    }\n\n    public int getQuantity() {\n        return quantity;\n    }\n}"
+          }
         ]
       },
       {
@@ -190,8 +290,13 @@
         "paragraphs": [
           "접근 제어자는 클래스, 필드, 메서드의 접근 가능 범위를 정하는 문법이다. `public`은 넓게 공개하고, `private`은 같은 클래스 내부로 접근을 제한한다. default와 `protected`는 패키지와 상속 관계에 따라 접근 범위가 달라진다.",
           "캡슐화는 객체의 내부 데이터를 숨기고, 정해진 메서드를 통해서만 접근하도록 만드는 설계 방식이다. 필드는 일반적으로 `private`으로 선언하고, 외부에서 필요한 기능은 `public` 메서드로 제공한다. getter는 값을 읽는 통로이고, setter는 값을 변경하는 통로이며, setter에는 유효성 검사를 넣을 수 있다.",
-          "```java\nclass Member {\n    private String name;\n    private int age;\n\n    public void setAge(int age) {\n        if (age >= 0) {\n            this.age = age;\n        }\n    }\n\n    public int getAge() {\n        return age;\n    }\n}\n```",
           "이 구조를 이해하면 객체가 자신의 데이터를 스스로 보호하고 관리한다는 객체 지향의 기본 관점을 잡을 수 있다. 캡슐화는 이후 상속, 다형성, 인터페이스, 예외 처리와 같은 문법을 설계 관점에서 이해하는 기반이 된다."
+        ],
+        "codeExamples": [
+          {
+            "title": "접근 제어자와 캡슐화 핵심 정리 예제",
+            "code": "class Member {\n    private String name;\n    private int age;\n\n    public void setAge(int age) {\n        if (age >= 0) {\n            this.age = age;\n        }\n    }\n\n    public int getAge() {\n        return age;\n    }\n}"
+          }
         ]
       }
     ],
