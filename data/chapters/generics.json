@@ -1,0 +1,935 @@
+{
+  "id": "generics",
+  "order": 16,
+  "title": "제네릭",
+  "summary": "Java Generic을 이용해 타입 안정성과 코드 재사용성을 높이는 방법을 이해하고, 제네릭 클래스, 제네릭 메서드, 컬렉션, 제한 타입, 와일드카드를 학습한다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "제네릭을 배우는 이유",
+        "paragraphs": [
+          "제네릭은 클래스, 인터페이스, 메서드를 작성할 때 사용할 데이터 타입을 나중에 지정할 수 있게 하는 문법이다. Java에서 여러 종류의 데이터를 다루는 코드를 만들다 보면 같은 구조의 코드가 타입만 달라지는 경우가 많다. 예를 들어 문자열 목록, 정수 목록, 학생 객체 목록은 저장하는 값의 타입은 다르지만 값을 추가하고 꺼내는 기본 동작은 비슷하다. 제네릭은 이런 공통 구조를 하나의 코드로 작성하면서도 타입 안정성을 유지할 수 있게 한다.",
+          "제네릭을 사용하지 않으면 Object 타입으로 여러 값을 저장하고 꺼낸 뒤 형변환을 해야 하는 경우가 많다. 이 방식은 코드가 복잡해지고, 잘못된 타입을 넣어도 컴파일 단계에서 잡기 어렵다. 반면 제네릭을 사용하면 어떤 타입을 다룰지 코드에 명확히 표시할 수 있고, 컴파일러가 잘못된 타입 사용을 미리 검사한다. 따라서 제네릭은 컬렉션, API 응답 객체, 공통 결과 처리 클래스, 재사용 가능한 유틸리티 메서드에서 매우 자주 사용된다."
+        ]
+      },
+      {
+        "heading": "제네릭을 사용하지 않을 때의 문제",
+        "paragraphs": [
+          "제네릭이 없으면 여러 타입을 하나의 클래스에서 다루기 위해 Object 타입을 사용하는 방식이 흔하다. Object는 Java의 최상위 클래스이므로 문자열, 정수, 사용자 정의 객체 등 거의 모든 객체를 담을 수 있다. 하지만 값을 꺼낼 때 실제 타입으로 다시 형변환해야 한다. 이때 개발자가 잘못된 타입으로 형변환하면 실행 중 오류가 발생할 수 있다.",
+          "이 문제는 컴파일 단계에서 발견하기 어렵다는 점이 중요하다. Object 타입으로 저장하면 컴파일러는 그 안에 실제로 어떤 타입이 들어 있는지 충분히 알 수 없다. 따라서 잘못된 형변환이 코드에 있어도 컴파일이 통과될 수 있고, 프로그램 실행 중 ClassCastException이 발생할 수 있다. 제네릭은 이런 위험을 줄이기 위해 등장한 문법이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "Object 타입 사용의 문제",
+            "code": "class Box {\n    private Object value;\n\n    public void setValue(Object value) {\n        this.value = value;\n    }\n\n    public Object getValue() {\n        return value;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Box box = new Box();\n        box.setValue(\"Java\");\n\n        String text = (String) box.getValue();\n        System.out.println(text);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭의 기본 개념",
+        "paragraphs": [
+          "제네릭은 타입을 매개변수처럼 다루는 문법이다. 메서드가 값을 매개변수로 받아 실행 시점에 사용하는 것처럼, 제네릭 클래스는 타입을 매개변수처럼 받아 해당 타입에 맞게 동작한다. 예를 들어 Box<T>에서 T는 아직 정해지지 않은 타입을 의미하고, 실제 사용할 때 Box<String>, Box<Integer>처럼 구체적인 타입을 지정한다.",
+          "여기서 T는 타입 매개변수라고 부른다. 타입 매개변수 이름은 반드시 T일 필요는 없지만, 관례적으로 Type의 의미로 T를 많이 사용한다. 중요한 것은 제네릭을 통해 클래스 내부에서 사용하는 타입을 고정하지 않고, 사용할 때 지정할 수 있다는 점이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "제네릭 클래스의 기본 형태",
+            "code": "class Box<T> {\n    private T value;\n\n    public void setValue(T value) {\n        this.value = value;\n    }\n\n    public T getValue() {\n        return value;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Box<String> box = new Box<>();\n        box.setValue(\"Java\");\n\n        String text = box.getValue();\n        System.out.println(text);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "타입 매개변수 T의 의미",
+        "paragraphs": [
+          "타입 매개변수 T는 실제 타입이 들어올 자리를 의미한다. Box<T>를 선언하면 클래스 내부에서 T를 필드 타입, 매개변수 타입, 반환 타입으로 사용할 수 있다. 이후 Box<String>으로 객체를 만들면 T 자리는 String으로 해석되고, Box<Integer>로 만들면 T 자리는 Integer로 해석된다.",
+          "이 구조 덕분에 하나의 Box 클래스가 여러 타입의 값을 안전하게 담을 수 있다. String 전용 Box, Integer 전용 Box를 각각 따로 만들 필요가 없다. 제네릭은 코드 중복을 줄이면서도 타입 안정성을 유지하는 데 도움을 준다."
+        ],
+        "codeExamples": [
+          {
+            "title": "타입 매개변수 사용 위치",
+            "code": "class Holder<T> {\n    private T data;\n\n    public Holder(T data) {\n        this.data = data;\n    }\n\n    public T getData() {\n        return data;\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭 클래스 사용 방법",
+        "paragraphs": [
+          "제네릭 클래스를 사용할 때는 클래스 이름 뒤에 꺾쇠괄호를 붙이고 실제 타입을 지정한다. 예를 들어 Box<String>은 String 타입만 저장하는 Box를 의미한다. Box<Integer>는 Integer 타입만 저장하는 Box를 의미한다. 이렇게 타입을 지정하면 컴파일러가 해당 타입 외의 값을 넣는 코드를 오류로 처리할 수 있다.",
+          "Java 7 이후에는 오른쪽 생성자 부분에서 타입을 생략하고 다이아몬드 연산자 <>를 사용할 수 있다. 예를 들어 Box<String> box = new Box<>();라고 작성할 수 있다. 왼쪽 선언부에 타입 정보가 있으므로 컴파일러가 오른쪽의 타입을 추론할 수 있기 때문이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "다이아몬드 연산자 사용",
+            "code": "Box<String> stringBox = new Box<>();\nBox<Integer> integerBox = new Box<>();"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭과 타입 안정성",
+        "paragraphs": [
+          "타입 안정성이란 잘못된 타입의 값이 들어가거나 잘못된 타입으로 꺼내지는 문제를 컴파일 단계에서 줄일 수 있다는 의미다. 제네릭을 사용하면 Box<String>에는 String만 넣을 수 있고, getValue()의 결과도 String으로 인식된다. 따라서 불필요한 형변환을 줄일 수 있다.",
+          "제네릭을 사용하지 않는 Object 기반 코드는 실행 중 형변환 오류가 발생할 수 있지만, 제네릭은 많은 오류를 컴파일 단계에서 미리 확인하게 한다. Java에서 컴파일 단계의 오류 확인은 안정적인 프로그램 작성에 중요한 역할을 한다."
+        ],
+        "codeExamples": [
+          {
+            "title": "잘못된 타입 저장 방지",
+            "code": "Box<String> box = new Box<>();\nbox.setValue(\"Java\");\n// box.setValue(100); // 컴파일 오류: String Box에는 Integer 값을 넣을 수 없다."
+          }
+        ]
+      },
+      {
+        "heading": "제네릭과 형변환 감소",
+        "paragraphs": [
+          "제네릭을 사용하면 값을 꺼낼 때 매번 형변환을 하지 않아도 된다. Box<String>에서 getValue()를 호출하면 반환 타입이 이미 String으로 결정되어 있으므로 String 변수에 바로 저장할 수 있다. 이 점은 코드의 가독성과 안정성을 높인다.",
+          "형변환 코드가 많으면 개발자가 실제 타입을 계속 기억해야 하고, 잘못된 형변환이 들어갈 위험이 커진다. 제네릭은 타입 정보를 클래스 사용 시점에 명확히 지정하게 하므로 불필요한 형변환을 줄이는 효과가 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "형변환 없는 값 조회",
+            "code": "Box<String> box = new Box<>();\nbox.setValue(\"Spring\");\nString value = box.getValue();\nSystem.out.println(value);"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭과 기본 자료형",
+        "paragraphs": [
+          "제네릭의 타입 인자로는 기본 자료형을 직접 사용할 수 없다. 예를 들어 Box<int>는 사용할 수 없다. 제네릭은 참조형 타입을 대상으로 동작하므로 int 대신 Integer, double 대신 Double, boolean 대신 Boolean 같은 래퍼 클래스를 사용해야 한다.",
+          "Java의 컬렉션도 같은 규칙을 따른다. ArrayList<int>가 아니라 ArrayList<Integer>를 사용한다. 기본 자료형과 래퍼 클래스 사이에는 오토박싱과 언박싱이 적용될 수 있어 실제 코드에서는 Integer 값을 int처럼 사용하는 경우가 많다."
+        ],
+        "codeExamples": [
+          {
+            "title": "래퍼 클래스 사용",
+            "code": "Box<Integer> box = new Box<>();\nbox.setValue(100);\nInteger value = box.getValue();\nSystem.out.println(value);"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭 타입 이름 관례",
+        "paragraphs": [
+          "제네릭 타입 매개변수 이름은 개발자가 정할 수 있지만 일반적으로 많이 사용하는 관례가 있다. T는 Type, E는 Element, K는 Key, V는 Value, N은 Number를 의미할 때 자주 사용한다. 예를 들어 List<E>에서 E는 요소 타입을 의미하고, Map<K, V>에서 K는 키 타입, V는 값 타입을 의미한다.",
+          "이름은 문법적으로 T가 아니어도 되지만, 관례를 따르면 다른 개발자가 코드를 더 쉽게 이해할 수 있다. 제네릭은 추상적인 타입을 다루는 문법이므로 타입 매개변수 이름이 명확해야 코드의 의미가 분명해진다."
+        ],
+        "codeExamples": [
+          {
+            "title": "타입 매개변수 이름 예",
+            "code": "class Pair<K, V> {\n    private K key;\n    private V value;\n\n    public Pair(K key, V value) {\n        this.key = key;\n        this.value = value;\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "두 개 이상의 타입 매개변수",
+        "paragraphs": [
+          "제네릭 클래스는 하나의 타입 매개변수만 사용할 필요가 없다. 두 개 이상의 타입 매개변수를 사용할 수 있다. 예를 들어 Pair<K, V>는 키와 값을 함께 저장하는 구조를 표현할 수 있다. K와 V는 각각 서로 다른 타입이 될 수 있다.",
+          "이 구조는 Map 자료구조를 이해할 때도 중요하다. Map은 키와 값의 쌍으로 데이터를 저장하며, 키 타입과 값 타입이 서로 다를 수 있다. 제네릭을 사용하면 이런 관계를 타입 수준에서 표현할 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "두 타입을 사용하는 Pair",
+            "code": "class Pair<K, V> {\n    private K key;\n    private V value;\n\n    public Pair(K key, V value) {\n        this.key = key;\n        this.value = value;\n    }\n\n    public K getKey() {\n        return key;\n    }\n\n    public V getValue() {\n        return value;\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭 메서드",
+        "paragraphs": [
+          "제네릭은 클래스뿐 아니라 메서드에도 사용할 수 있다. 제네릭 메서드는 메서드 자체에 타입 매개변수를 선언하고, 호출할 때 전달되는 값에 따라 타입이 결정되는 메서드다. 제네릭 메서드는 클래스 전체가 제네릭일 필요 없이 특정 메서드만 타입을 일반화하고 싶을 때 사용한다.",
+          "제네릭 메서드를 선언할 때는 반환 타입 앞에 <T>와 같은 타입 매개변수 선언을 작성한다. 예를 들어 public static <T> void print(T value)는 어떤 타입의 값이든 받아 출력할 수 있는 메서드다."
+        ],
+        "codeExamples": [
+          {
+            "title": "제네릭 메서드",
+            "code": "class Printer {\n    public static <T> void print(T value) {\n        System.out.println(value);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Printer.print(\"Java\");\n        Printer.print(100);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭 클래스와 제네릭 메서드의 차이",
+        "paragraphs": [
+          "제네릭 클래스는 클래스 전체에서 사용할 타입 매개변수를 선언한다. 클래스의 필드, 생성자, 메서드 전체에서 같은 타입 매개변수를 사용할 수 있다. 반면 제네릭 메서드는 특정 메서드에서만 타입 매개변수를 사용한다. 따라서 한 클래스 안에서도 필요한 메서드에만 제네릭을 적용할 수 있다.",
+          "클래스의 상태가 특정 타입에 의존한다면 제네릭 클래스를 사용하는 것이 적절하다. 반대로 상태를 저장하지 않고 여러 타입의 값을 처리하는 기능만 필요하다면 제네릭 메서드가 적합할 수 있다."
+        ]
+      },
+      {
+        "heading": "컬렉션과 제네릭",
+        "paragraphs": [
+          "Java 컬렉션은 제네릭을 가장 많이 사용하는 영역이다. ArrayList<String>은 문자열만 저장하는 리스트를 의미하고, ArrayList<Integer>는 정수 래퍼 객체만 저장하는 리스트를 의미한다. 제네릭을 사용하지 않는 컬렉션은 여러 타입이 섞여 들어갈 수 있어 타입 안정성이 떨어진다.",
+          "컬렉션에서 제네릭을 사용하면 값을 꺼낼 때 형변환이 필요 없고, 잘못된 타입을 추가하려는 코드를 컴파일 단계에서 막을 수 있다. 따라서 Java에서 List, Set, Map 같은 컬렉션을 사용할 때는 제네릭 타입을 명확히 지정하는 것이 기본이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "ArrayList와 제네릭",
+            "code": "import java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<String> names = new ArrayList<>();\n        names.add(\"Kim\");\n        names.add(\"Lee\");\n\n        String first = names.get(0);\n        System.out.println(first);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "Map과 제네릭",
+        "paragraphs": [
+          "Map은 키와 값을 한 쌍으로 저장하는 컬렉션이다. Map에서도 제네릭은 매우 중요하다. 예를 들어 HashMap<String, Integer>는 문자열 키와 정수 값을 가지는 맵을 의미한다. 첫 번째 타입 인자는 키 타입이고, 두 번째 타입 인자는 값 타입이다.",
+          "Map에 제네릭을 적용하면 어떤 타입의 키로 값을 찾고, 어떤 타입의 값이 저장되는지 코드에서 명확하게 표현할 수 있다. 이것은 데이터 구조의 의미를 드러내는 데도 도움이 된다."
+        ],
+        "codeExamples": [
+          {
+            "title": "HashMap과 제네릭",
+            "code": "import java.util.HashMap;\n\npublic class Main {\n    public static void main(String[] args) {\n        HashMap<String, Integer> scores = new HashMap<>();\n        scores.put(\"Kim\", 90);\n        scores.put(\"Lee\", 85);\n\n        int score = scores.get(\"Kim\");\n        System.out.println(score);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭 제한 타입",
+        "paragraphs": [
+          "때로는 제네릭 타입으로 아무 타입이나 받으면 안 되는 경우가 있다. 예를 들어 숫자 타입만 받아 계산해야 한다면 String 같은 타입이 들어오면 안 된다. 이때 extends를 사용해 타입 매개변수의 상한을 제한할 수 있다. 예를 들어 <T extends Number>는 T가 Number 또는 Number의 하위 타입이어야 한다는 뜻이다.",
+          "제한 타입을 사용하면 제네릭의 유연성을 유지하면서도 사용할 수 있는 타입의 범위를 좁힐 수 있다. 이를 통해 메서드나 클래스 내부에서 특정 상위 타입의 기능을 안전하게 사용할 수 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "extends를 이용한 타입 제한",
+            "code": "class NumberBox<T extends Number> {\n    private T value;\n\n    public NumberBox(T value) {\n        this.value = value;\n    }\n\n    public double doubleValue() {\n        return value.doubleValue();\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "와일드카드의 개념",
+        "paragraphs": [
+          "와일드카드 ?는 정확한 타입을 알 수 없거나 여러 타입을 포괄해서 다루고 싶을 때 사용한다. 예를 들어 List<?>는 어떤 타입의 요소를 가진 리스트인지 정확히 지정하지 않았다는 의미다. 와일드카드는 제네릭 타입을 더 유연하게 받을 수 있게 한다.",
+          "다만 와일드카드를 사용하면 타입이 구체적으로 정해지지 않기 때문에 값을 추가하는 작업에는 제한이 생길 수 있다. 와일드카드는 단순히 아무 타입이나 마음대로 사용한다는 의미가 아니라, 타입을 안전하게 다루기 위한 제약을 가진 문법이다."
+        ],
+        "codeExamples": [
+          {
+            "title": "와일드카드 사용",
+            "code": "import java.util.List;\n\nclass Printer {\n    public static void printAll(List<?> list) {\n        for (Object item : list) {\n            System.out.println(item);\n        }\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "상한 와일드카드",
+        "paragraphs": [
+          "상한 와일드카드는 ? extends 타입 형태로 작성한다. 예를 들어 List<? extends Number>는 Number 또는 Number의 하위 타입을 요소로 가지는 리스트를 받을 수 있다는 뜻이다. Integer, Double 같은 리스트를 하나의 메서드에서 처리하고 싶을 때 사용할 수 있다.",
+          "상한 와일드카드는 값을 읽는 데 적합하다. 리스트에서 꺼낸 값은 최소한 Number 타입으로 볼 수 있다. 하지만 정확한 하위 타입이 무엇인지 알 수 없기 때문에 새로운 값을 추가하는 데는 제한이 있다."
+        ],
+        "codeExamples": [
+          {
+            "title": "상한 와일드카드",
+            "code": "import java.util.List;\n\nclass Calculator {\n    public static double sum(List<? extends Number> numbers) {\n        double total = 0;\n        for (Number number : numbers) {\n            total += number.doubleValue();\n        }\n        return total;\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "하한 와일드카드",
+        "paragraphs": [
+          "하한 와일드카드는 ? super 타입 형태로 작성한다. 예를 들어 List<? super Integer>는 Integer 또는 Integer의 상위 타입을 요소로 가질 수 있는 리스트를 의미한다. 이 구조는 Integer 값을 안전하게 추가해야 할 때 사용할 수 있다.",
+          "와일드카드를 이해할 때는 읽기와 쓰기의 관점을 구분해야 한다. 상한 와일드카드는 주로 읽기에 적합하고, 하한 와일드카드는 특정 타입 값을 넣는 작업에 적합하다. 초보 단계에서는 ? extends와 ? super가 각각 타입 범위를 제한하는 문법이라는 점을 먼저 이해하면 된다."
+        ],
+        "codeExamples": [
+          {
+            "title": "하한 와일드카드",
+            "code": "import java.util.List;\n\nclass NumberAdder {\n    public static void addNumbers(List<? super Integer> list) {\n        list.add(10);\n        list.add(20);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭과 타입 소거",
+        "paragraphs": [
+          "Java의 제네릭은 컴파일 단계에서 타입 안정성을 검사하지만, 실행 시점에는 많은 제네릭 타입 정보가 지워진다. 이를 타입 소거라고 한다. 예를 들어 ArrayList<String>과 ArrayList<Integer>는 컴파일 단계에서는 서로 다른 타입처럼 검사되지만, 실행 시점에는 둘 다 ArrayList로 처리된다.",
+          "타입 소거 때문에 제네릭 타입에 대해 실행 시점에 직접 확인하기 어려운 경우가 있다. 이 내용은 고급 주제에 가깝지만, 제네릭이 실행 시점보다 컴파일 시점의 타입 안정성을 높이기 위한 문법이라는 점을 이해하는 데 중요하다."
+        ]
+      },
+      {
+        "heading": "raw type을 피해야 하는 이유",
+        "paragraphs": [
+          "제네릭 클래스에서 타입 인자를 지정하지 않고 사용하는 것을 raw type이라고 한다. 예를 들어 ArrayList list = new ArrayList();처럼 작성하면 리스트에 어떤 타입이 들어가는지 컴파일러가 충분히 검사하지 못한다. 이 방식은 제네릭의 장점을 잃게 만든다.",
+          "raw type을 사용하면 서로 다른 타입의 값이 섞여 들어갈 수 있고, 값을 꺼낼 때 형변환 오류가 발생할 수 있다. 따라서 특별한 이유가 없다면 제네릭 타입을 명확히 지정해야 한다. ArrayList<String> names = new ArrayList<>();처럼 작성하는 것이 안전하다."
+        ],
+        "codeExamples": [
+          {
+            "title": "raw type 문제",
+            "code": "import java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList list = new ArrayList();\n        list.add(\"Java\");\n        list.add(100);\n\n        String text = (String) list.get(1); // 실행 중 오류 가능\n        System.out.println(text);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "제네릭 설계 시 주의할 점",
+        "paragraphs": [
+          "제네릭은 강력하지만 모든 곳에 무조건 적용해야 하는 문법은 아니다. 타입이 하나로 고정되어 있고 재사용 가능성이 낮은 클래스라면 제네릭을 쓰지 않는 것이 더 단순할 수 있다. 반대로 여러 타입에 대해 같은 구조를 반복해서 만들어야 한다면 제네릭이 적합하다.",
+          "제네릭을 설계할 때는 타입 매개변수가 실제로 클래스나 메서드의 의미를 더 명확하게 만드는지 확인해야 한다. 불필요하게 많은 타입 매개변수를 사용하면 오히려 코드가 복잡해질 수 있다. 좋은 제네릭 코드는 재사용성과 타입 안정성을 높이면서도 사용 방법이 분명해야 한다."
+        ]
+      },
+      {
+        "heading": "제네릭 단원 핵심 정리",
+        "paragraphs": [
+          "제네릭은 타입을 나중에 지정할 수 있게 하여 재사용성과 타입 안정성을 높이는 Java 문법이다. 제네릭 클래스는 클래스 이름 뒤에 <T>와 같은 타입 매개변수를 선언하고, 실제 사용할 때 Box<String>, Box<Integer>처럼 타입을 지정한다. 제네릭을 사용하면 Object 기반 코드에서 필요한 형변환을 줄이고, 잘못된 타입 사용을 컴파일 단계에서 발견할 수 있다.",
+          "제네릭은 클래스, 메서드, 컬렉션에서 자주 사용된다. ArrayList<String>, HashMap<String, Integer> 같은 컬렉션 선언은 제네릭의 대표적인 사용 사례다. 또한 제한 타입, 와일드카드, raw type, 타입 소거 같은 개념을 이해하면 제네릭을 더 안정적으로 사용할 수 있다. 핵심은 어떤 타입을 다룰지 코드에 명확히 표현하고, 컴파일러의 타입 검사를 적극적으로 활용하는 것이다."
+        ]
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "generics-q1",
+      "question": "제네릭을 사용하는 가장 중요한 목적은 무엇인가?",
+      "choices": {
+        "A": "타입 안정성과 코드 재사용성을 높이기 위해",
+        "B": "모든 변수를 public으로 만들기 위해",
+        "C": "반복문을 자동 생성하기 위해",
+        "D": "JVM을 삭제하기 위해"
+      },
+      "answer": "A",
+      "explanation": "제네릭은 여러 타입에 대해 같은 구조를 재사용하면서도 컴파일 단계에서 타입 안정성을 확보하기 위한 문법이다.",
+      "analysis": "제네릭을 문법 기호가 아니라 타입 안전한 재사용 구조로 이해해야 한다."
+    },
+    {
+      "id": "generics-q2",
+      "question": "Object 타입만 사용했을 때의 문제로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "항상 코드가 컴파일되지 않는다",
+        "B": "값을 꺼낼 때 형변환이 필요하고 실행 중 오류가 생길 수 있다",
+        "C": "문자열을 저장할 수 없다",
+        "D": "클래스를 만들 수 없다"
+      },
+      "answer": "B",
+      "explanation": "Object는 여러 타입을 담을 수 있지만 꺼낼 때 실제 타입으로 형변환해야 하며 잘못된 형변환은 ClassCastException을 유발할 수 있다.",
+      "analysis": "제네릭이 Object 기반 코드의 위험을 줄인다는 점을 이해해야 한다."
+    },
+    {
+      "id": "generics-q3",
+      "question": "Box<T>에서 T의 의미로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "반복 변수",
+        "B": "접근 제어자",
+        "C": "타입 매개변수",
+        "D": "패키지 이름"
+      },
+      "answer": "C",
+      "explanation": "T는 실제 사용할 때 지정될 타입의 자리를 나타내는 타입 매개변수다.",
+      "analysis": "T는 값이 아니라 타입을 대표하는 이름이다."
+    },
+    {
+      "id": "generics-q4",
+      "question": "Box<String> box = new Box<>();에서 String의 역할은 무엇인가?",
+      "choices": {
+        "A": "클래스 이름을 바꾸는 값",
+        "B": "컴파일러 옵션",
+        "C": "메서드 이름",
+        "D": "Box가 다룰 실제 타입"
+      },
+      "answer": "D",
+      "explanation": "Box<String>은 Box의 타입 매개변수 T를 String으로 지정한다는 의미다.",
+      "analysis": "제네릭 사용 시 타입 인자가 클래스 내부의 T 자리를 채운다."
+    },
+    {
+      "id": "generics-q5",
+      "question": "제네릭 클래스의 기본 선언 형태로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "class Box<T> { }",
+        "B": "if Box<T> { }",
+        "C": "for Box<T> { }",
+        "D": "new T class { }"
+      },
+      "answer": "A",
+      "explanation": "제네릭 클래스는 클래스 이름 뒤에 <T>와 같은 타입 매개변수를 붙여 선언한다.",
+      "analysis": "제네릭 선언 위치를 정확히 알아야 한다."
+    },
+    {
+      "id": "generics-q6",
+      "question": "다이아몬드 연산자 <>에 대한 설명으로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "조건문을 뜻한다",
+        "B": "오른쪽 생성자에서 타입 추론을 가능하게 한다",
+        "C": "항상 int 전용이다",
+        "D": "접근 제어자를 나타낸다"
+      },
+      "answer": "B",
+      "explanation": "new Box<>()처럼 작성하면 왼쪽 선언부의 타입 정보를 바탕으로 컴파일러가 타입을 추론한다.",
+      "analysis": "다이아몬드 연산자는 제네릭 객체 생성 코드를 간결하게 한다."
+    },
+    {
+      "id": "generics-q7",
+      "question": "제네릭 타입 인자로 직접 사용할 수 없는 것은 무엇인가?",
+      "choices": {
+        "A": "String",
+        "B": "Integer",
+        "C": "int",
+        "D": "Student"
+      },
+      "answer": "C",
+      "explanation": "제네릭 타입 인자는 참조형이어야 하므로 기본 자료형 int는 직접 사용할 수 없다. 대신 Integer를 사용한다.",
+      "analysis": "기본 자료형과 래퍼 클래스의 차이를 연결해서 이해해야 한다."
+    },
+    {
+      "id": "generics-q8",
+      "question": "int 대신 제네릭에서 사용하는 래퍼 클래스는 무엇인가?",
+      "choices": {
+        "A": "Double",
+        "B": "Boolean",
+        "C": "Character",
+        "D": "Integer"
+      },
+      "answer": "D",
+      "explanation": "int의 래퍼 클래스는 Integer이다.",
+      "analysis": "컬렉션과 제네릭에서는 int가 아니라 Integer를 사용한다."
+    },
+    {
+      "id": "generics-q9",
+      "question": "타입 매개변수 이름 E는 관례적으로 무엇을 의미할 때 많이 쓰는가?",
+      "choices": {
+        "A": "Element",
+        "B": "Error",
+        "C": "Engine",
+        "D": "Equals"
+      },
+      "answer": "A",
+      "explanation": "E는 컬렉션의 요소 타입을 의미하는 Element의 약자로 자주 사용된다.",
+      "analysis": "타입 매개변수 이름은 관례를 따르면 코드 이해가 쉬워진다."
+    },
+    {
+      "id": "generics-q10",
+      "question": "Map<K, V>에서 K와 V의 의미로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "K는 반복 횟수, V는 조건식",
+        "B": "K는 키 타입, V는 값 타입",
+        "C": "K는 클래스 이름, V는 파일명",
+        "D": "K는 접근 범위, V는 패키지"
+      },
+      "answer": "B",
+      "explanation": "Map<K, V>에서 K는 key 타입, V는 value 타입을 의미한다.",
+      "analysis": "두 개 이상의 타입 매개변수를 사용하는 대표 사례다."
+    },
+    {
+      "id": "generics-q11",
+      "question": "제네릭 메서드를 선언할 때 타입 매개변수 <T>는 일반적으로 어디에 작성하는가?",
+      "choices": {
+        "A": "메서드 본문 끝",
+        "B": "클래스 파일명 뒤",
+        "C": "반환 타입 앞",
+        "D": "세미콜론 뒤"
+      },
+      "answer": "C",
+      "explanation": "제네릭 메서드는 public static <T> void print(T value)처럼 반환 타입 앞에 타입 매개변수를 선언한다.",
+      "analysis": "제네릭 클래스와 제네릭 메서드의 선언 위치를 구분해야 한다."
+    },
+    {
+      "id": "generics-q12",
+      "question": "제네릭 메서드에 대한 설명으로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "반드시 클래스 전체가 제네릭이어야 한다",
+        "B": "항상 생성자만 만들 수 있다",
+        "C": "boolean만 처리한다",
+        "D": "특정 메서드에서만 타입 매개변수를 사용할 수 있다"
+      },
+      "answer": "D",
+      "explanation": "제네릭 메서드는 클래스 전체가 아니라 특정 메서드 수준에서 타입 매개변수를 선언할 수 있다.",
+      "analysis": "상태 전체가 타입에 의존하지 않을 때 유용하다."
+    },
+    {
+      "id": "generics-q13",
+      "question": "ArrayList<String>의 의미로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "문자열을 요소로 저장하는 리스트",
+        "B": "정수만 저장하는 리스트",
+        "C": "파일 이름 목록",
+        "D": "접근 제어자 목록"
+      },
+      "answer": "A",
+      "explanation": "ArrayList<String>은 String 타입 요소를 저장하는 리스트를 의미한다.",
+      "analysis": "컬렉션에서 제네릭 타입은 저장할 요소 타입을 나타낸다."
+    },
+    {
+      "id": "generics-q14",
+      "question": "HashMap<String, Integer>에 대한 설명으로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "키와 값이 모두 문자열이다",
+        "B": "키는 String, 값은 Integer이다",
+        "C": "키는 Integer, 값은 String이다",
+        "D": "제네릭을 사용하지 않는다"
+      },
+      "answer": "B",
+      "explanation": "HashMap<String, Integer>는 문자열 키와 Integer 값을 저장하는 맵이다.",
+      "analysis": "Map의 타입 인자 순서를 정확히 읽어야 한다."
+    },
+    {
+      "id": "generics-q15",
+      "question": "제네릭을 사용하면 값을 꺼낼 때 얻는 장점으로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "모든 값이 자동으로 null이 된다",
+        "B": "반복문이 사라진다",
+        "C": "불필요한 형변환을 줄일 수 있다",
+        "D": "클래스가 삭제된다"
+      },
+      "answer": "C",
+      "explanation": "제네릭 타입이 지정되어 있으면 get 결과 타입을 컴파일러가 알 수 있어 형변환을 줄일 수 있다.",
+      "analysis": "제네릭은 코드 가독성과 안전성을 함께 높인다."
+    },
+    {
+      "id": "generics-q16",
+      "question": "<T extends Number>의 의미로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "T는 반드시 String이어야 한다",
+        "B": "T는 기본 자료형이어야 한다",
+        "C": "T는 사용할 수 없다",
+        "D": "T는 Number 또는 그 하위 타입이어야 한다"
+      },
+      "answer": "D",
+      "explanation": "extends를 사용한 제한 타입은 타입 매개변수의 상한을 지정한다.",
+      "analysis": "제네릭의 유연성을 제한하여 더 안전한 설계를 만들 수 있다."
+    },
+    {
+      "id": "generics-q17",
+      "question": "List<?>에서 ?의 의미는 무엇인가?",
+      "choices": {
+        "A": "정확한 타입을 알 수 없는 와일드카드",
+        "B": "정확히 String만 의미한다",
+        "C": "반드시 int 타입",
+        "D": "컴파일 오류 기호"
+      },
+      "answer": "A",
+      "explanation": "?는 와일드카드로, 구체적인 타입을 특정하지 않고 제네릭 타입을 받을 때 사용한다.",
+      "analysis": "와일드카드는 유연하지만 타입 안전을 위한 제한도 가진다."
+    },
+    {
+      "id": "generics-q18",
+      "question": "List<? extends Number>에 대한 설명으로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "반드시 String 리스트만 받는다",
+        "B": "Number 또는 Number 하위 타입 리스트를 받을 수 있다",
+        "C": "값을 항상 자유롭게 추가할 수 있다",
+        "D": "제네릭과 관련이 없다"
+      },
+      "answer": "B",
+      "explanation": "상한 와일드카드는 지정 타입 또는 그 하위 타입을 허용한다.",
+      "analysis": "extends 와일드카드는 주로 읽기 관점에서 사용된다."
+    },
+    {
+      "id": "generics-q19",
+      "question": "List<? super Integer>에 대한 설명으로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "Integer 하위 타입만 받는다",
+        "B": "String만 저장한다",
+        "C": "Integer 또는 Integer 상위 타입 리스트를 받을 수 있다",
+        "D": "객체 생성을 막는다"
+      },
+      "answer": "C",
+      "explanation": "하한 와일드카드는 지정 타입 또는 그 상위 타입을 허용한다.",
+      "analysis": "super 와일드카드는 특정 타입 값을 넣는 작업과 연결된다."
+    },
+    {
+      "id": "generics-q20",
+      "question": "raw type에 대한 설명으로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "항상 안전한 방식",
+        "B": "제네릭의 권장 사용 방식",
+        "C": "기본 자료형 전용 방식",
+        "D": "제네릭 타입 인자를 지정하지 않고 사용하는 방식"
+      },
+      "answer": "D",
+      "explanation": "ArrayList list처럼 타입 인자를 지정하지 않고 사용하는 것이 raw type이다.",
+      "analysis": "raw type은 제네릭의 타입 안정성 장점을 약화시킨다."
+    },
+    {
+      "id": "generics-q21",
+      "question": "raw type을 피해야 하는 이유로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "잘못된 타입이 섞이고 형변환 오류가 발생할 수 있기 때문",
+        "B": "객체 생성이 불가능하기 때문",
+        "C": "반복문이 실행되지 않기 때문",
+        "D": "문자열을 출력할 수 없기 때문"
+      },
+      "answer": "A",
+      "explanation": "raw type은 컴파일러가 요소 타입을 충분히 검사하지 못해 실행 중 오류 위험이 커진다.",
+      "analysis": "제네릭 타입을 명확히 지정하는 습관이 중요하다."
+    },
+    {
+      "id": "generics-q22",
+      "question": "타입 소거에 대한 설명으로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "소스 파일을 삭제하는 명령",
+        "B": "컴파일 후 많은 제네릭 타입 정보가 실행 시점에는 제거되는 특성",
+        "C": "변수를 초기화하는 과정",
+        "D": "상속을 금지하는 문법"
+      },
+      "answer": "B",
+      "explanation": "Java 제네릭은 컴파일 단계에서 타입을 검사하고 실행 시점에는 많은 타입 정보가 소거된다.",
+      "analysis": "타입 소거는 고급 개념이지만 제네릭의 동작 방식을 이해하는 데 중요하다."
+    },
+    {
+      "id": "generics-q23",
+      "question": "제네릭 클래스가 적합한 상황은 무엇인가?",
+      "choices": {
+        "A": "항상 한 줄 코드만 작성할 때",
+        "B": "조건문을 없앨 때",
+        "C": "여러 타입에 대해 같은 구조를 재사용해야 할 때",
+        "D": "파일 이름을 바꿀 때"
+      },
+      "answer": "C",
+      "explanation": "같은 구조가 타입만 달라지는 경우 제네릭 클래스를 사용하면 중복을 줄일 수 있다.",
+      "analysis": "제네릭은 재사용 가능한 타입 안전 구조를 만들 때 적합하다."
+    },
+    {
+      "id": "generics-q24",
+      "question": "다음 중 제네릭 사용 예로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "if (score > 90)",
+        "B": "for (int i = 0; i < 10; i++)",
+        "C": "public class Main",
+        "D": "ArrayList<String> names = new ArrayList<>();"
+      },
+      "answer": "D",
+      "explanation": "ArrayList<String>은 제네릭 컬렉션 사용 예이다.",
+      "analysis": "컬렉션 선언에서 제네릭을 자주 확인할 수 있다."
+    },
+    {
+      "id": "generics-q25",
+      "question": "Box<Integer>에 저장하기 적절한 값은 무엇인가?",
+      "choices": {
+        "A": "100",
+        "B": "\"Java\"",
+        "C": "true",
+        "D": "'A'"
+      },
+      "answer": "A",
+      "explanation": "Box<Integer>는 Integer 값을 저장하는 구조이므로 100 같은 정수 값이 적절하다.",
+      "analysis": "오토박싱으로 int 리터럴이 Integer로 처리될 수 있다."
+    },
+    {
+      "id": "generics-q26",
+      "question": "Box<String>에 box.setValue(100)을 작성하면 일반적으로 어떤 문제가 발생하는가?",
+      "choices": {
+        "A": "항상 정상 실행",
+        "B": "컴파일 오류",
+        "C": "자동으로 문자열 배열이 생성",
+        "D": "JVM이 삭제"
+      },
+      "answer": "B",
+      "explanation": "Box<String>에는 String 타입 값만 넣을 수 있으므로 Integer 값인 100은 컴파일 오류가 된다.",
+      "analysis": "제네릭은 잘못된 타입 저장을 컴파일 단계에서 막는다."
+    },
+    {
+      "id": "generics-q27",
+      "question": "제네릭이 Object 기반 코드보다 나은 점으로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "모든 코드를 더 느리게 만든다",
+        "B": "클래스를 사용할 수 없게 한다",
+        "C": "타입을 명확히 지정해 컴파일러 검사를 받을 수 있다",
+        "D": "항상 형변환이 더 많이 필요하다"
+      },
+      "answer": "C",
+      "explanation": "제네릭은 타입 정보를 명시하여 컴파일러가 잘못된 타입 사용을 검사하게 한다.",
+      "analysis": "타입 안정성은 제네릭의 핵심이다."
+    },
+    {
+      "id": "generics-q28",
+      "question": "제네릭 타입 매개변수 이름으로 관례적으로 키를 나타내는 것은 무엇인가?",
+      "choices": {
+        "A": "T",
+        "B": "E",
+        "C": "N",
+        "D": "K"
+      },
+      "answer": "D",
+      "explanation": "K는 Key의 의미로 Map 같은 구조에서 키 타입을 나타낼 때 자주 사용한다.",
+      "analysis": "관례적 이름을 알면 제네릭 코드를 읽기 쉽다."
+    },
+    {
+      "id": "generics-q29",
+      "question": "제네릭 타입 매개변수 이름으로 관례적으로 값을 나타내는 것은 무엇인가?",
+      "choices": {
+        "A": "V",
+        "B": "K",
+        "C": "E",
+        "D": "T"
+      },
+      "answer": "A",
+      "explanation": "V는 Value의 의미로 값 타입을 나타낼 때 자주 사용한다.",
+      "analysis": "Map<K,V>의 V를 정확히 이해해야 한다."
+    },
+    {
+      "id": "generics-q30",
+      "question": "제네릭 타입 매개변수 이름으로 관례적으로 숫자 타입을 나타내는 것은 무엇인가?",
+      "choices": {
+        "A": "E",
+        "B": "N",
+        "C": "K",
+        "D": "V"
+      },
+      "answer": "B",
+      "explanation": "N은 Number의 의미로 숫자 계열 타입을 나타낼 때 사용될 수 있다.",
+      "analysis": "타입 매개변수 이름은 관례지만 의미 전달에 중요하다."
+    },
+    {
+      "id": "generics-q31",
+      "question": "제네릭 메서드 `public static <T> T first(T a, T b)`에서 반환 타입은 무엇인가?",
+      "choices": {
+        "A": "void",
+        "B": "String만 가능",
+        "C": "T",
+        "D": "int만 가능"
+      },
+      "answer": "C",
+      "explanation": "반환 타입이 T이므로 전달된 타입과 같은 타입의 값을 반환할 수 있다.",
+      "analysis": "제네릭 메서드에서는 T를 매개변수와 반환 타입 모두에 사용할 수 있다."
+    },
+    {
+      "id": "generics-q32",
+      "question": "제네릭 클래스 Box<T>에서 T를 사용할 수 있는 위치가 아닌 것은 무엇인가?",
+      "choices": {
+        "A": "필드 타입",
+        "B": "메서드 매개변수 타입",
+        "C": "메서드 반환 타입",
+        "D": "Java 예약어 자체"
+      },
+      "answer": "D",
+      "explanation": "T는 타입 위치에서 사용할 수 있지만 Java 예약어 자체를 대체하는 것은 아니다.",
+      "analysis": "T는 타입 매개변수라는 점을 구분해야 한다."
+    },
+    {
+      "id": "generics-q33",
+      "question": "다음 중 제네릭의 타입 안정성과 가장 관련이 깊은 것은 무엇인가?",
+      "choices": {
+        "A": "잘못된 타입 사용을 컴파일 단계에서 줄인다",
+        "B": "모든 실행 오류를 제거한다",
+        "C": "메모리를 전혀 사용하지 않는다",
+        "D": "조건문을 자동으로 만든다"
+      },
+      "answer": "A",
+      "explanation": "제네릭은 타입 관련 오류를 컴파일 단계에서 줄여 준다.",
+      "analysis": "모든 오류를 없애는 것은 아니지만 타입 관련 안정성을 높인다."
+    },
+    {
+      "id": "generics-q34",
+      "question": "`ArrayList<Integer>`에서 사용할 수 있는 값으로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "\"Kim\"",
+        "B": "10",
+        "C": "true",
+        "D": "new Object()만 가능"
+      },
+      "answer": "B",
+      "explanation": "ArrayList<Integer>는 Integer 값을 저장하므로 정수 값 10이 적절하다.",
+      "analysis": "컬렉션 제네릭 타입에 맞는 요소를 넣어야 한다."
+    },
+    {
+      "id": "generics-q35",
+      "question": "제네릭에서 기본 자료형을 직접 사용할 수 없기 때문에 필요한 개념은 무엇인가?",
+      "choices": {
+        "A": "중괄호",
+        "B": "접근 제어자",
+        "C": "래퍼 클래스",
+        "D": "패키지 삭제"
+      },
+      "answer": "C",
+      "explanation": "int 대신 Integer, double 대신 Double 같은 래퍼 클래스를 사용한다.",
+      "analysis": "제네릭과 컬렉션에서 래퍼 클래스는 매우 자주 등장한다."
+    },
+    {
+      "id": "generics-q36",
+      "question": "제네릭을 사용하지 않은 컬렉션에서 여러 타입을 섞어 넣으면 어떤 문제가 생길 수 있는가?",
+      "choices": {
+        "A": "항상 성능이 0이 된다",
+        "B": "컴파일러가 자동으로 모든 값을 삭제한다",
+        "C": "클래스 선언이 불가능하다",
+        "D": "형변환 오류 위험이 커진다"
+      },
+      "answer": "D",
+      "explanation": "타입이 섞이면 값을 꺼낼 때 잘못된 타입으로 형변환할 위험이 커진다.",
+      "analysis": "raw type과 Object 기반 저장의 문제를 이해해야 한다."
+    },
+    {
+      "id": "generics-q37",
+      "question": "와일드카드 `?`를 사용하는 이유로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "구체적인 제네릭 타입을 넓게 받을 수 있게 하기 위해",
+        "B": "항상 int만 처리하기 위해",
+        "C": "반복문을 강제로 종료하기 위해",
+        "D": "파일을 컴파일하지 않기 위해"
+      },
+      "answer": "A",
+      "explanation": "와일드카드는 정확한 타입을 특정하지 않고 다양한 제네릭 타입을 받을 때 사용한다.",
+      "analysis": "와일드카드는 유연성과 제한을 동시에 가진다."
+    },
+    {
+      "id": "generics-q38",
+      "question": "상한 와일드카드 `? extends Number`에서 읽은 값을 최소한 어떤 타입으로 볼 수 있는가?",
+      "choices": {
+        "A": "String",
+        "B": "Number",
+        "C": "boolean",
+        "D": "char"
+      },
+      "answer": "B",
+      "explanation": "Number 또는 그 하위 타입이므로 꺼낸 값은 최소한 Number로 다룰 수 있다.",
+      "analysis": "extends 와일드카드는 읽기 관점에서 이해하면 쉽다."
+    },
+    {
+      "id": "generics-q39",
+      "question": "하한 와일드카드 `? super Integer`가 유용한 상황은 무엇인가?",
+      "choices": {
+        "A": "문자열만 비교할 때",
+        "B": "반드시 값을 읽지 못하게 할 때",
+        "C": "Integer 값을 안전하게 추가해야 할 때",
+        "D": "클래스 이름을 변경할 때"
+      },
+      "answer": "C",
+      "explanation": "Integer 또는 그 상위 타입의 리스트에는 Integer 값을 추가할 수 있다.",
+      "analysis": "super 와일드카드는 쓰기 작업과 연결해서 이해한다."
+    },
+    {
+      "id": "generics-q40",
+      "question": "제네릭 설계 시 주의할 점으로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "필요 없는 곳에도 무조건 제네릭을 적용한다",
+        "B": "모든 타입을 raw type으로 사용한다",
+        "C": "컴파일 오류를 무시한다",
+        "D": "타입 매개변수가 실제 의미를 명확하게 하는지 판단한다"
+      },
+      "answer": "D",
+      "explanation": "제네릭은 재사용성과 타입 안정성을 높일 때 적절히 사용해야 한다.",
+      "analysis": "좋은 제네릭 설계는 단순하고 의미가 분명해야 한다."
+    },
+    {
+      "id": "generics-q41",
+      "question": "다음 중 제네릭 메서드 호출 예로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "Printer.print(\"Java\");",
+        "B": "class if { }",
+        "C": "for public static",
+        "D": "new int<T>()"
+      },
+      "answer": "A",
+      "explanation": "Printer.print(\"Java\")는 제네릭 메서드가 전달값 타입을 추론해 실행되는 예가 될 수 있다.",
+      "analysis": "제네릭 메서드는 호출 시 타입이 추론될 수 있다."
+    },
+    {
+      "id": "generics-q42",
+      "question": "제네릭 타입 제한을 사용하는 이유로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "모든 타입을 금지하기 위해",
+        "B": "허용되는 타입 범위를 좁히기 위해",
+        "C": "반드시 public으로 만들기 위해",
+        "D": "반복 횟수를 늘리기 위해"
+      },
+      "answer": "B",
+      "explanation": "extends 제한을 사용하면 특정 상위 타입의 하위 타입만 허용할 수 있다.",
+      "analysis": "타입 제한은 유연성과 안정성의 균형을 맞춘다."
+    },
+    {
+      "id": "generics-q43",
+      "question": "NumberBox<T extends Number>에서 T로 사용할 수 있는 타입으로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "String",
+        "B": "Object만 가능",
+        "C": "Integer",
+        "D": "boolean 기본형"
+      },
+      "answer": "C",
+      "explanation": "Integer는 Number의 하위 클래스이므로 T로 사용할 수 있다.",
+      "analysis": "제한 타입의 허용 범위를 읽을 수 있어야 한다."
+    },
+    {
+      "id": "generics-q44",
+      "question": "제네릭과 컬렉션을 함께 사용할 때 가장 권장되는 방식은 무엇인가?",
+      "choices": {
+        "A": "항상 raw type으로 선언한다",
+        "B": "모든 값을 Object로만 꺼낸다",
+        "C": "형변환을 최대한 늘린다",
+        "D": "컬렉션 타입 인자를 명확히 지정한다"
+      },
+      "answer": "D",
+      "explanation": "컬렉션에는 ArrayList<String>처럼 요소 타입을 명확히 지정하는 것이 좋다.",
+      "analysis": "타입 인자 지정은 컬렉션 사용의 기본이다."
+    },
+    {
+      "id": "generics-q45",
+      "question": "다음 중 제네릭의 장점으로 보기 어려운 것은 무엇인가?",
+      "choices": {
+        "A": "모든 논리 오류 자동 제거",
+        "B": "코드 재사용성 향상",
+        "C": "타입 안정성 향상",
+        "D": "형변환 감소"
+      },
+      "answer": "A",
+      "explanation": "제네릭은 타입 관련 오류를 줄이지만 모든 논리 오류를 자동으로 제거하지는 않는다.",
+      "analysis": "제네릭의 효과와 한계를 함께 이해해야 한다."
+    },
+    {
+      "id": "generics-q46",
+      "question": "제네릭 타입 인자를 명확히 지정하면 컴파일러가 할 수 있는 일은 무엇인가?",
+      "choices": {
+        "A": "모든 문장을 자동 작성한다",
+        "B": "잘못된 타입 저장을 검사할 수 있다",
+        "C": "JVM을 설치한다",
+        "D": "파일을 압축한다"
+      },
+      "answer": "B",
+      "explanation": "컴파일러는 지정된 타입과 맞지 않는 값 저장을 오류로 처리할 수 있다.",
+      "analysis": "제네릭은 컴파일러의 타입 검사를 활용하는 문법이다."
+    },
+    {
+      "id": "generics-q47",
+      "question": "제네릭 클래스에서 `private T value;`의 의미로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "value는 항상 int이다",
+        "B": "value는 사용할 수 없다",
+        "C": "value 필드의 타입이 실제 지정된 타입으로 결정된다",
+        "D": "T는 접근 제어자이다"
+      },
+      "answer": "C",
+      "explanation": "Box<String>이면 value는 String처럼, Box<Integer>이면 Integer처럼 사용된다.",
+      "analysis": "T는 클래스 사용 시점에 지정된 타입으로 해석된다."
+    },
+    {
+      "id": "generics-q48",
+      "question": "제네릭을 이용한 API 응답 객체 설계에 적합한 예는 무엇인가?",
+      "choices": {
+        "A": "if<T>",
+        "B": "for<T>",
+        "C": "public<T>",
+        "D": "Response<T>"
+      },
+      "answer": "D",
+      "explanation": "Response<T>처럼 응답 데이터 타입을 제네릭으로 두면 여러 응답 형태를 하나의 구조로 표현할 수 있다.",
+      "analysis": "실무에서도 공통 응답, 페이지 결과, 박스 구조 등에 제네릭이 자주 쓰인다."
+    },
+    {
+      "id": "generics-q49",
+      "question": "제네릭을 처음 학습할 때 가장 먼저 이해해야 할 핵심은 무엇인가?",
+      "choices": {
+        "A": "타입을 나중에 지정해 재사용성과 타입 안정성을 높인다",
+        "B": "모든 코드를 static으로 만든다",
+        "C": "조건문을 삭제한다",
+        "D": "JVM 없이 실행한다"
+      },
+      "answer": "A",
+      "explanation": "제네릭의 출발점은 타입을 매개변수처럼 다루는 것이다.",
+      "analysis": "제네릭은 컬렉션과 객체 지향 설계를 확장하는 핵심 문법이다."
+    },
+    {
+      "id": "generics-q50",
+      "question": "다음 중 제네릭 단원의 핵심 정리로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "제네릭은 반복문 전용 문법이다",
+        "B": "제네릭은 타입 안전한 재사용 코드를 만드는 문법이다",
+        "C": "제네릭은 숫자만 다루는 문법이다",
+        "D": "제네릭은 파일 다운로드 기능이다"
+      },
+      "answer": "B",
+      "explanation": "제네릭은 타입을 일반화해 재사용하면서 컴파일 단계 타입 검사를 받을 수 있게 한다.",
+      "analysis": "제네릭의 목적과 사용 위치를 종합적으로 이해해야 한다."
+    }
+  ],
+  "analysisGuide": {
+    "excellent": "제네릭의 목적을 타입 안정성과 재사용성 관점에서 설명할 수 있고, 제네릭 클래스, 제네릭 메서드, 컬렉션 제네릭, 제한 타입, 와일드카드의 차이를 코드 수준에서 구분할 수 있다. Object 기반 코드의 문제와 raw type의 위험도 함께 설명할 수 있다.",
+    "good": "제네릭 클래스와 컬렉션 제네릭의 기본 사용법을 이해하고 있으며, Box<T>, ArrayList<String>, HashMap<String, Integer> 같은 코드를 읽을 수 있다. 제한 타입과 와일드카드는 추가 예제 학습을 통해 더 정리하면 좋다.",
+    "needsImprovement": "제네릭을 단순히 꺾쇠괄호 문법으로만 이해하고 있을 가능성이 있다. 타입 매개변수의 의미, 기본 자료형 대신 래퍼 클래스를 사용하는 이유, Object와 제네릭의 차이, 컬렉션에서 제네릭을 사용하는 이유를 다시 정리해야 한다.",
+    "reviewFocus": [
+      "제네릭을 사용하는 이유",
+      "타입 매개변수 T의 의미",
+      "Object 기반 코드와 제네릭 코드의 차이",
+      "Box<T> 형태의 제네릭 클래스",
+      "제네릭 메서드 선언 위치",
+      "ArrayList<String>과 HashMap<String, Integer> 읽기",
+      "기본 자료형과 래퍼 클래스",
+      "제한 타입 <T extends Number>",
+      "와일드카드 ?, ? extends, ? super",
+      "raw type을 피해야 하는 이유"
+    ]
+  }
+}
