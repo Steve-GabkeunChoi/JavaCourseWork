@@ -6,6 +6,7 @@
     { "file": "loops.json" },
     { "file": "classes.json" },
     { "file": "constructors.json" },
-    { "file": "encapsulation.json" }
+    { "file": "encapsulation.json" },
+    { "file": "static-members.json" }
   ]
 }
