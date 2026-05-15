@@ -23,6 +23,27 @@
     },
     {
       "file": "static-members.json"
+    },
+    {
+      "file": "methods-advanced.json"
+    },
+    {
+      "file": "object-arrays.json"
+    },
+    {
+      "file": "inheritance.json"
+    },
+    {
+      "file": "polymorphism.json"
+    },
+    {
+      "file": "abstract-classes.json"
+    },
+    {
+      "file": "interfaces.json"
+    },
+    {
+      "file": "exceptions.json"
     }
   ]
 }

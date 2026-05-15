@@ -1,0 +1,838 @@
+{
+  "id": "exceptions",
+  "order": 15,
+  "title": "예외 처리",
+  "summary": "try, catch, finally, throw, throws와 대표 예외를 이해하고 안정적인 오류 대응 흐름을 학습한다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "1. 예외 처리를 배우는 이유",
+        "paragraphs": [
+          "프로그램은 항상 정상적인 입력과 상황에서만 실행되지 않는다. 숫자를 0으로 나누거나, 없는 파일을 읽거나, null 객체에 접근하거나, 잘못된 숫자 형식의 문자열을 변환하려는 상황이 발생할 수 있다. 이런 실행 중 문제를 예외라고 한다.",
+          "예외 처리는 프로그램이 오류 상황에서 무조건 중단되지 않고 적절히 대응하도록 만드는 문법이다. 사용자에게 안내 메시지를 보여 주거나, 대체 흐름을 실행하거나, 자원을 정리하는 데 사용한다."
+        ]
+      },
+      {
+        "heading": "2. 예외의 의미",
+        "paragraphs": [
+          "예외는 프로그램 실행 중 발생하는 비정상 상황을 객체로 표현한 것이다. Java에서는 다양한 예외 클래스가 제공되며, 예외가 발생하면 현재 실행 흐름이 중단되고 예외 처리 흐름으로 이동한다.",
+          "예외를 이해하면 컴파일 오류와 실행 오류의 차이도 더 명확해진다."
+        ]
+      },
+      {
+        "heading": "3. 컴파일 오류와 예외",
+        "paragraphs": [
+          "컴파일 오류는 문법이나 타입 문제로 실행 전에 발생하는 오류다. 예외는 컴파일이 성공한 뒤 실행 중에 발생할 수 있는 문제다.",
+          "예를 들어 세미콜론 누락은 컴파일 오류이고, 실행 중 0으로 나누기는 ArithmeticException이 될 수 있다."
+        ]
+      },
+      {
+        "heading": "4. try-catch 구조",
+        "paragraphs": [
+          "try 블록에는 예외가 발생할 수 있는 코드를 작성하고, catch 블록에는 예외가 발생했을 때 처리할 코드를 작성한다.",
+          "try 안에서 예외가 발생하면 남은 try 코드는 건너뛰고 해당 예외를 처리할 수 있는 catch 블록으로 이동한다."
+        ],
+        "examples": [
+          {
+            "title": "try-catch 기본 구조",
+            "code": "public class Main {\n    public static void main(String[] args) {\n        try {\n            int result = 10 / 0;\n            System.out.println(result);\n        } catch (ArithmeticException e) {\n            System.out.println(\"0으로 나눌 수 없습니다.\");\n        }\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "5. catch의 역할",
+        "paragraphs": [
+          "catch는 특정 예외 타입을 잡아 처리한다. catch의 매개변수에는 발생한 예외 객체가 들어오며, 이를 이용해 메시지나 원인을 확인할 수 있다.",
+          "예외 타입에 맞는 catch가 없으면 예외는 호출한 쪽으로 전달되거나 프로그램이 중단될 수 있다."
+        ]
+      },
+      {
+        "heading": "6. finally 블록",
+        "paragraphs": [
+          "finally 블록은 예외 발생 여부와 관계없이 실행되는 블록이다. 파일 닫기, 연결 해제, 자원 정리처럼 반드시 수행해야 하는 작업에 사용한다.",
+          "try-catch-finally 구조에서 finally는 마지막에 실행된다."
+        ],
+        "examples": [
+          {
+            "title": "finally 사용",
+            "code": "try {\n    System.out.println(\"작업 실행\");\n} catch (Exception e) {\n    System.out.println(\"예외 처리\");\n} finally {\n    System.out.println(\"정리 작업\");\n}"
+          }
+        ]
+      },
+      {
+        "heading": "7. throw 키워드",
+        "paragraphs": [
+          "throw는 개발자가 직접 예외를 발생시킬 때 사용하는 키워드다. 잘못된 값이 들어왔을 때 명시적으로 예외를 던질 수 있다.",
+          "예를 들어 음수 나이를 허용하지 않는 메서드에서 IllegalArgumentException을 던질 수 있다."
+        ],
+        "examples": [
+          {
+            "title": "throw 사용",
+            "code": "class User {\n    void setAge(int age) {\n        if (age < 0) {\n            throw new IllegalArgumentException(\"나이는 음수일 수 없습니다.\");\n        }\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "8. throws 키워드",
+        "paragraphs": [
+          "throws는 메서드 선언부에 작성하여 해당 메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘긴다는 의미를 나타낸다.",
+          "throws는 예외를 처리하는 것이 아니라 처리 책임을 호출자에게 알리고 전달하는 문법이다."
+        ],
+        "examples": [
+          {
+            "title": "throws 사용",
+            "code": "import java.io.IOException;\n\nclass FileService {\n    void readFile() throws IOException {\n        throw new IOException(\"파일 읽기 실패\");\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "9. Checked 예외와 Unchecked 예외",
+        "paragraphs": [
+          "Checked 예외는 컴파일러가 처리 여부를 검사하는 예외다. IOException 같은 예외가 대표적이다. Unchecked 예외는 RuntimeException 계열로 컴파일러가 반드시 처리를 강제하지 않는다.",
+          "두 종류를 구분하면 왜 어떤 예외는 try-catch가 필수처럼 보이고 어떤 예외는 그렇지 않은지 이해할 수 있다."
+        ]
+      },
+      {
+        "heading": "10. RuntimeException",
+        "paragraphs": [
+          "RuntimeException은 실행 중 잘못된 코드 흐름이나 값 때문에 발생하는 예외의 상위 계열이다. NullPointerException, ArithmeticException, NumberFormatException 등이 포함된다.",
+          "Unchecked 예외라고 해서 무시해도 된다는 뜻은 아니다. 발생 원인을 줄이는 코드 작성이 중요하다."
+        ]
+      },
+      {
+        "heading": "11. NullPointerException",
+        "paragraphs": [
+          "NullPointerException은 null 참조에 대해 필드나 메서드에 접근하려 할 때 발생한다. 객체가 생성되었는지 확인하지 않고 점 연산자를 사용하는 경우가 대표적이다.",
+          "null 가능성이 있는 값은 사용 전에 검사하거나, null이 생기지 않도록 설계하는 것이 좋다."
+        ]
+      },
+      {
+        "heading": "12. ArithmeticException",
+        "paragraphs": [
+          "ArithmeticException은 산술 연산 중 문제가 발생할 때 나타날 수 있다. 대표적으로 정수를 0으로 나누는 경우가 있다.",
+          "나누기 전 분모가 0인지 검사하면 예외를 예방할 수 있다."
+        ]
+      },
+      {
+        "heading": "13. NumberFormatException",
+        "paragraphs": [
+          "NumberFormatException은 숫자로 바꿀 수 없는 문자열을 숫자로 변환하려 할 때 발생한다. 예를 들어 \"abc\"를 Integer.parseInt로 변환하면 문제가 된다.",
+          "사용자 입력을 숫자로 변환할 때 자주 발생하므로 예외 처리가 필요하다."
+        ],
+        "examples": [
+          {
+            "title": "문자열 숫자 변환 예외",
+            "code": "try {\n    int number = Integer.parseInt(\"abc\");\n} catch (NumberFormatException e) {\n    System.out.println(\"숫자로 변환할 수 없습니다.\");\n}"
+          }
+        ]
+      },
+      {
+        "heading": "14. 예외 메시지",
+        "paragraphs": [
+          "예외 객체의 getMessage()를 사용하면 예외와 관련된 메시지를 확인할 수 있다. 이 메시지는 원인 파악에 도움을 줄 수 있다.",
+          "다만 사용자에게 내부 오류 메시지를 그대로 보여 주는 것은 적절하지 않을 수 있다."
+        ]
+      },
+      {
+        "heading": "15. 예외 처리 설계",
+        "paragraphs": [
+          "예외 처리는 오류를 숨기는 것이 아니다. 문제 상황을 적절히 감지하고, 필요한 곳에서 처리하거나 상위 계층으로 전달하는 설계다.",
+          "try-catch를 무분별하게 사용해 모든 예외를 무시하면 오히려 문제 원인을 찾기 어려워진다."
+        ]
+      },
+      {
+        "heading": "16. 사용자 입력과 예외 처리",
+        "paragraphs": [
+          "사용자 입력은 항상 올바르다고 가정하면 안 된다. 숫자를 입력해야 하는 곳에 문자를 입력할 수 있고, 빈 값을 전달할 수도 있다.",
+          "입력값을 검증하고 변환 과정에서 발생할 수 있는 예외를 처리해야 안정적인 프로그램이 된다."
+        ]
+      },
+      {
+        "heading": "17. 자원 정리와 예외",
+        "paragraphs": [
+          "파일, 네트워크, 데이터베이스 연결 같은 자원은 사용 후 정리해야 한다. 예외가 발생해도 정리 코드가 실행되도록 finally나 try-with-resources를 사용할 수 있다.",
+          "초보 단계에서는 finally의 의미를 먼저 이해하고, 이후 try-with-resources로 확장하면 된다."
+        ]
+      },
+      {
+        "heading": "18. try-with-resources 개념",
+        "paragraphs": [
+          "try-with-resources는 AutoCloseable 자원을 자동으로 닫아 주는 구조다. 파일 입출력이나 데이터베이스 연결에서 자주 사용된다.",
+          "자원 정리를 누락하는 실수를 줄이는 현대적인 방식이다."
+        ]
+      },
+      {
+        "heading": "19. 예외를 예방하는 코드",
+        "paragraphs": [
+          "예외 처리는 중요하지만, 발생 가능한 문제를 미리 조건문으로 예방하는 것도 중요하다. null 검사, 범위 검사, 0 나누기 검사, 입력값 검증이 대표적이다.",
+          "예외 처리는 마지막 방어선이고, 좋은 코드는 잘못된 상태가 발생하지 않도록 먼저 설계한다."
+        ]
+      },
+      {
+        "heading": "20. 예외 처리 핵심 정리",
+        "paragraphs": [
+          "예외 처리는 실행 중 발생할 수 있는 비정상 상황에 대응하는 문법이다. try, catch, finally, throw, throws를 이해하고 예외 종류와 처리 위치를 구분해야 한다.",
+          "예외를 무조건 숨기지 말고 원인에 맞게 처리하거나 전달하는 것이 중요하다."
+        ]
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "exceptions-q1",
+      "question": "예외 처리의 목적은 무엇인가?",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q2",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    },
+    {
+      "id": "exceptions-q3",
+      "question": "catch 블록의 역할은 무엇인가?",
+      "choices": {
+        "A": "항상 반복문을 시작한다.",
+        "B": "파일명을 변경한다.",
+        "C": "발생한 예외를 잡아 처리한다.",
+        "D": "필드를 초기화만 한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. catch는 지정한 예외 타입을 처리하는 블록이다.",
+      "analysis": "예외 타입이 맞아야 해당 catch가 실행된다."
+    },
+    {
+      "id": "exceptions-q4",
+      "question": "finally 블록에 대한 설명으로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "예외가 없을 때만 실행된다.",
+        "B": "컴파일 오류를 자동 수정한다.",
+        "C": "반드시 return 값을 가진다.",
+        "D": "예외 발생 여부와 관계없이 실행된다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. finally는 정리 작업에 사용된다.",
+      "analysis": "자원 해제와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q5",
+      "question": "throw 키워드의 역할은 무엇인가?",
+      "choices": {
+        "A": "개발자가 직접 예외를 발생시킨다.",
+        "B": "예외를 호출한 쪽으로 선언만 한다.",
+        "C": "객체 배열을 생성한다.",
+        "D": "문자열을 출력한다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. throw는 실제 예외 객체를 던진다.",
+      "analysis": "throws와 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q6",
+      "question": "throws 키워드의 역할은 무엇인가?",
+      "choices": {
+        "A": "예외 객체를 즉시 생성한다.",
+        "B": "메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘김을 선언한다.",
+        "C": "반복문을 종료한다.",
+        "D": "필드를 private으로 바꾼다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. throws는 처리 책임을 호출자에게 알리는 선언이다.",
+      "analysis": "throw와 throws의 차이를 정확히 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q7",
+      "question": "NullPointerException이 발생하는 대표 상황은 무엇인가?",
+      "choices": {
+        "A": "정수를 0으로 나누지 않을 때이다.",
+        "B": "문자열을 정상 숫자로 바꿀 때이다.",
+        "C": "null 참조로 필드나 메서드에 접근할 때이다.",
+        "D": "배열을 선언만 할 때 항상 발생한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. null 객체에 점 연산자를 사용하면 발생할 수 있다.",
+      "analysis": "null 검사와 객체 생성 여부 확인이 중요하다."
+    },
+    {
+      "id": "exceptions-q8",
+      "question": "NumberFormatException이 발생하는 대표 상황은 무엇인가?",
+      "choices": {
+        "A": "객체를 new로 생성할 때이다.",
+        "B": "boolean 값을 출력할 때이다.",
+        "C": "정상적인 int 덧셈을 할 때이다.",
+        "D": "숫자로 바꿀 수 없는 문자열을 숫자로 변환할 때이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 문자열 숫자 변환 과정에서 자주 발생한다.",
+      "analysis": "사용자 입력 처리와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q9",
+      "question": "예외 처리의 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q10",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    },
+    {
+      "id": "exceptions-q11",
+      "question": "catch 블록의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "항상 반복문을 시작한다.",
+        "B": "파일명을 변경한다.",
+        "C": "발생한 예외를 잡아 처리한다.",
+        "D": "필드를 초기화만 한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. catch는 지정한 예외 타입을 처리하는 블록이다.",
+      "analysis": "예외 타입이 맞아야 해당 catch가 실행된다."
+    },
+    {
+      "id": "exceptions-q12",
+      "question": "finally 블록에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외가 없을 때만 실행된다.",
+        "B": "컴파일 오류를 자동 수정한다.",
+        "C": "반드시 return 값을 가진다.",
+        "D": "예외 발생 여부와 관계없이 실행된다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. finally는 정리 작업에 사용된다.",
+      "analysis": "자원 해제와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q13",
+      "question": "throw 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "개발자가 직접 예외를 발생시킨다.",
+        "B": "예외를 호출한 쪽으로 선언만 한다.",
+        "C": "객체 배열을 생성한다.",
+        "D": "문자열을 출력한다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. throw는 실제 예외 객체를 던진다.",
+      "analysis": "throws와 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q14",
+      "question": "throws 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외 객체를 즉시 생성한다.",
+        "B": "메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘김을 선언한다.",
+        "C": "반복문을 종료한다.",
+        "D": "필드를 private으로 바꾼다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. throws는 처리 책임을 호출자에게 알리는 선언이다.",
+      "analysis": "throw와 throws의 차이를 정확히 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q15",
+      "question": "NullPointerException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "정수를 0으로 나누지 않을 때이다.",
+        "B": "문자열을 정상 숫자로 바꿀 때이다.",
+        "C": "null 참조로 필드나 메서드에 접근할 때이다.",
+        "D": "배열을 선언만 할 때 항상 발생한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. null 객체에 점 연산자를 사용하면 발생할 수 있다.",
+      "analysis": "null 검사와 객체 생성 여부 확인이 중요하다."
+    },
+    {
+      "id": "exceptions-q16",
+      "question": "NumberFormatException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체를 new로 생성할 때이다.",
+        "B": "boolean 값을 출력할 때이다.",
+        "C": "정상적인 int 덧셈을 할 때이다.",
+        "D": "숫자로 바꿀 수 없는 문자열을 숫자로 변환할 때이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 문자열 숫자 변환 과정에서 자주 발생한다.",
+      "analysis": "사용자 입력 처리와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q17",
+      "question": "예외 처리의 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q18",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    },
+    {
+      "id": "exceptions-q19",
+      "question": "catch 블록의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "항상 반복문을 시작한다.",
+        "B": "파일명을 변경한다.",
+        "C": "발생한 예외를 잡아 처리한다.",
+        "D": "필드를 초기화만 한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. catch는 지정한 예외 타입을 처리하는 블록이다.",
+      "analysis": "예외 타입이 맞아야 해당 catch가 실행된다."
+    },
+    {
+      "id": "exceptions-q20",
+      "question": "finally 블록에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외가 없을 때만 실행된다.",
+        "B": "컴파일 오류를 자동 수정한다.",
+        "C": "반드시 return 값을 가진다.",
+        "D": "예외 발생 여부와 관계없이 실행된다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. finally는 정리 작업에 사용된다.",
+      "analysis": "자원 해제와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q21",
+      "question": "throw 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "개발자가 직접 예외를 발생시킨다.",
+        "B": "예외를 호출한 쪽으로 선언만 한다.",
+        "C": "객체 배열을 생성한다.",
+        "D": "문자열을 출력한다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. throw는 실제 예외 객체를 던진다.",
+      "analysis": "throws와 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q22",
+      "question": "throws 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외 객체를 즉시 생성한다.",
+        "B": "메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘김을 선언한다.",
+        "C": "반복문을 종료한다.",
+        "D": "필드를 private으로 바꾼다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. throws는 처리 책임을 호출자에게 알리는 선언이다.",
+      "analysis": "throw와 throws의 차이를 정확히 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q23",
+      "question": "NullPointerException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "정수를 0으로 나누지 않을 때이다.",
+        "B": "문자열을 정상 숫자로 바꿀 때이다.",
+        "C": "null 참조로 필드나 메서드에 접근할 때이다.",
+        "D": "배열을 선언만 할 때 항상 발생한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. null 객체에 점 연산자를 사용하면 발생할 수 있다.",
+      "analysis": "null 검사와 객체 생성 여부 확인이 중요하다."
+    },
+    {
+      "id": "exceptions-q24",
+      "question": "NumberFormatException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체를 new로 생성할 때이다.",
+        "B": "boolean 값을 출력할 때이다.",
+        "C": "정상적인 int 덧셈을 할 때이다.",
+        "D": "숫자로 바꿀 수 없는 문자열을 숫자로 변환할 때이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 문자열 숫자 변환 과정에서 자주 발생한다.",
+      "analysis": "사용자 입력 처리와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q25",
+      "question": "예외 처리의 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q26",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    },
+    {
+      "id": "exceptions-q27",
+      "question": "catch 블록의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "항상 반복문을 시작한다.",
+        "B": "파일명을 변경한다.",
+        "C": "발생한 예외를 잡아 처리한다.",
+        "D": "필드를 초기화만 한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. catch는 지정한 예외 타입을 처리하는 블록이다.",
+      "analysis": "예외 타입이 맞아야 해당 catch가 실행된다."
+    },
+    {
+      "id": "exceptions-q28",
+      "question": "finally 블록에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외가 없을 때만 실행된다.",
+        "B": "컴파일 오류를 자동 수정한다.",
+        "C": "반드시 return 값을 가진다.",
+        "D": "예외 발생 여부와 관계없이 실행된다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. finally는 정리 작업에 사용된다.",
+      "analysis": "자원 해제와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q29",
+      "question": "throw 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "개발자가 직접 예외를 발생시킨다.",
+        "B": "예외를 호출한 쪽으로 선언만 한다.",
+        "C": "객체 배열을 생성한다.",
+        "D": "문자열을 출력한다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. throw는 실제 예외 객체를 던진다.",
+      "analysis": "throws와 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q30",
+      "question": "throws 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외 객체를 즉시 생성한다.",
+        "B": "메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘김을 선언한다.",
+        "C": "반복문을 종료한다.",
+        "D": "필드를 private으로 바꾼다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. throws는 처리 책임을 호출자에게 알리는 선언이다.",
+      "analysis": "throw와 throws의 차이를 정확히 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q31",
+      "question": "NullPointerException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "정수를 0으로 나누지 않을 때이다.",
+        "B": "문자열을 정상 숫자로 바꿀 때이다.",
+        "C": "null 참조로 필드나 메서드에 접근할 때이다.",
+        "D": "배열을 선언만 할 때 항상 발생한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. null 객체에 점 연산자를 사용하면 발생할 수 있다.",
+      "analysis": "null 검사와 객체 생성 여부 확인이 중요하다."
+    },
+    {
+      "id": "exceptions-q32",
+      "question": "NumberFormatException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체를 new로 생성할 때이다.",
+        "B": "boolean 값을 출력할 때이다.",
+        "C": "정상적인 int 덧셈을 할 때이다.",
+        "D": "숫자로 바꿀 수 없는 문자열을 숫자로 변환할 때이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 문자열 숫자 변환 과정에서 자주 발생한다.",
+      "analysis": "사용자 입력 처리와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q33",
+      "question": "예외 처리의 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q34",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    },
+    {
+      "id": "exceptions-q35",
+      "question": "catch 블록의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "항상 반복문을 시작한다.",
+        "B": "파일명을 변경한다.",
+        "C": "발생한 예외를 잡아 처리한다.",
+        "D": "필드를 초기화만 한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. catch는 지정한 예외 타입을 처리하는 블록이다.",
+      "analysis": "예외 타입이 맞아야 해당 catch가 실행된다."
+    },
+    {
+      "id": "exceptions-q36",
+      "question": "finally 블록에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외가 없을 때만 실행된다.",
+        "B": "컴파일 오류를 자동 수정한다.",
+        "C": "반드시 return 값을 가진다.",
+        "D": "예외 발생 여부와 관계없이 실행된다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. finally는 정리 작업에 사용된다.",
+      "analysis": "자원 해제와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q37",
+      "question": "throw 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "개발자가 직접 예외를 발생시킨다.",
+        "B": "예외를 호출한 쪽으로 선언만 한다.",
+        "C": "객체 배열을 생성한다.",
+        "D": "문자열을 출력한다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. throw는 실제 예외 객체를 던진다.",
+      "analysis": "throws와 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q38",
+      "question": "throws 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외 객체를 즉시 생성한다.",
+        "B": "메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘김을 선언한다.",
+        "C": "반복문을 종료한다.",
+        "D": "필드를 private으로 바꾼다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. throws는 처리 책임을 호출자에게 알리는 선언이다.",
+      "analysis": "throw와 throws의 차이를 정확히 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q39",
+      "question": "NullPointerException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "정수를 0으로 나누지 않을 때이다.",
+        "B": "문자열을 정상 숫자로 바꿀 때이다.",
+        "C": "null 참조로 필드나 메서드에 접근할 때이다.",
+        "D": "배열을 선언만 할 때 항상 발생한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. null 객체에 점 연산자를 사용하면 발생할 수 있다.",
+      "analysis": "null 검사와 객체 생성 여부 확인이 중요하다."
+    },
+    {
+      "id": "exceptions-q40",
+      "question": "NumberFormatException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체를 new로 생성할 때이다.",
+        "B": "boolean 값을 출력할 때이다.",
+        "C": "정상적인 int 덧셈을 할 때이다.",
+        "D": "숫자로 바꿀 수 없는 문자열을 숫자로 변환할 때이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 문자열 숫자 변환 과정에서 자주 발생한다.",
+      "analysis": "사용자 입력 처리와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q41",
+      "question": "예외 처리의 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q42",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    },
+    {
+      "id": "exceptions-q43",
+      "question": "catch 블록의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "항상 반복문을 시작한다.",
+        "B": "파일명을 변경한다.",
+        "C": "발생한 예외를 잡아 처리한다.",
+        "D": "필드를 초기화만 한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. catch는 지정한 예외 타입을 처리하는 블록이다.",
+      "analysis": "예외 타입이 맞아야 해당 catch가 실행된다."
+    },
+    {
+      "id": "exceptions-q44",
+      "question": "finally 블록에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외가 없을 때만 실행된다.",
+        "B": "컴파일 오류를 자동 수정한다.",
+        "C": "반드시 return 값을 가진다.",
+        "D": "예외 발생 여부와 관계없이 실행된다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. finally는 정리 작업에 사용된다.",
+      "analysis": "자원 해제와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q45",
+      "question": "throw 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "개발자가 직접 예외를 발생시킨다.",
+        "B": "예외를 호출한 쪽으로 선언만 한다.",
+        "C": "객체 배열을 생성한다.",
+        "D": "문자열을 출력한다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. throw는 실제 예외 객체를 던진다.",
+      "analysis": "throws와 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q46",
+      "question": "throws 키워드의 역할은 무엇인지 고르시오.",
+      "choices": {
+        "A": "예외 객체를 즉시 생성한다.",
+        "B": "메서드에서 발생할 수 있는 예외를 호출한 쪽으로 넘김을 선언한다.",
+        "C": "반복문을 종료한다.",
+        "D": "필드를 private으로 바꾼다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. throws는 처리 책임을 호출자에게 알리는 선언이다.",
+      "analysis": "throw와 throws의 차이를 정확히 구분해야 한다."
+    },
+    {
+      "id": "exceptions-q47",
+      "question": "NullPointerException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "정수를 0으로 나누지 않을 때이다.",
+        "B": "문자열을 정상 숫자로 바꿀 때이다.",
+        "C": "null 참조로 필드나 메서드에 접근할 때이다.",
+        "D": "배열을 선언만 할 때 항상 발생한다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. null 객체에 점 연산자를 사용하면 발생할 수 있다.",
+      "analysis": "null 검사와 객체 생성 여부 확인이 중요하다."
+    },
+    {
+      "id": "exceptions-q48",
+      "question": "NumberFormatException이 발생하는 대표 상황은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체를 new로 생성할 때이다.",
+        "B": "boolean 값을 출력할 때이다.",
+        "C": "정상적인 int 덧셈을 할 때이다.",
+        "D": "숫자로 바꿀 수 없는 문자열을 숫자로 변환할 때이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 문자열 숫자 변환 과정에서 자주 발생한다.",
+      "analysis": "사용자 입력 처리와 연결해서 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q49",
+      "question": "예외 처리의 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "실행 중 비정상 상황에 적절히 대응하기 위해서이다.",
+        "B": "컴파일을 생략하기 위해서이다.",
+        "C": "모든 변수를 static으로 바꾸기 위해서이다.",
+        "D": "클래스 이름을 자동 생성하기 위해서이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 예외 처리는 실행 중 문제 상황을 처리하는 문법이다.",
+      "analysis": "오류를 숨기는 것이 아니라 적절히 대응하는 구조임을 이해해야 한다."
+    },
+    {
+      "id": "exceptions-q50",
+      "question": "try 블록에는 무엇을 작성하는가?",
+      "choices": {
+        "A": "항상 클래스 선언만 작성한다.",
+        "B": "예외가 발생할 수 있는 코드",
+        "C": "반드시 import 문만 작성한다.",
+        "D": "객체 생성이 금지된 코드"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. try는 예외 발생 가능성이 있는 실행 코드를 감싼다.",
+      "analysis": "예외가 발생하면 catch 흐름으로 이동할 수 있다."
+    }
+  ],
+  "analysisGuide": {
+    "excellent": "45문항 이상 정답이면 핵심 문법의 의미, 코드 구조, 사용 상황을 안정적으로 이해한 수준이다. 예제 코드를 직접 변형하면서 문법 선택 이유를 설명하는 단계로 확장한다.",
+    "good": "35~44문항 정답이면 주요 개념은 이해했지만 세부 규칙이나 오류 상황에서 혼동이 남아 있는 수준이다. 오답 문항의 예제 코드를 직접 실행해 결과를 확인한다.",
+    "basic": "25~34문항 정답이면 단원의 기본 용어는 알고 있으나 코드 흐름과 실제 사용 기준을 연결하는 연습이 필요하다. 강의 탭의 예제를 먼저 따라 입력하고 문항을 다시 풀이한다.",
+    "needsReview": "24문항 이하 정답이면 문법 구조와 실행 흐름을 다시 정리해야 한다. 각 섹션의 설명, 예제 코드, 해설을 순서대로 재학습한 뒤 짧은 코드부터 다시 작성한다."
+  }
+}

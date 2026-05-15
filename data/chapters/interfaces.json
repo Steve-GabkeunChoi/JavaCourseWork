@@ -1,0 +1,797 @@
+{
+  "id": "interfaces",
+  "order": 14,
+  "title": "인터페이스",
+  "summary": "interface, implements, 인터페이스 타입, 다중 구현, 역할과 구현 분리를 이해한다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "1. 인터페이스를 배우는 이유",
+        "paragraphs": [
+          "인터페이스는 클래스가 반드시 구현해야 할 기능 목록을 정의하는 문법이다. 어떤 객체가 어떤 기능을 제공해야 하는지 규약을 먼저 정하고, 실제 구현은 각 클래스가 담당하게 할 수 있다.",
+          "예를 들어 알림 기능은 이메일, 문자, 푸시 등 구현 방식이 달라도 send라는 공통 기능을 가져야 할 수 있다."
+        ]
+      },
+      {
+        "heading": "2. interface 선언",
+        "paragraphs": [
+          "인터페이스는 interface 키워드로 선언한다. 인터페이스 안에는 구현 클래스가 제공해야 할 메서드를 선언할 수 있다.",
+          "전통적으로 인터페이스 메서드는 구현부 없이 선언되며, 구현 클래스에서 반드시 구현해야 한다."
+        ],
+        "examples": [
+          {
+            "title": "인터페이스 선언",
+            "code": "interface Notification {\n    void send(String message);\n}"
+          }
+        ]
+      },
+      {
+        "heading": "3. implements 키워드",
+        "paragraphs": [
+          "클래스가 인터페이스를 구현할 때는 implements 키워드를 사용한다. `class EmailNotification implements Notification`은 EmailNotification 클래스가 Notification 규약을 구현한다는 뜻이다.",
+          "인터페이스를 구현한 클래스는 인터페이스에 선언된 추상 메서드를 구현해야 한다."
+        ],
+        "examples": [
+          {
+            "title": "인터페이스 구현",
+            "code": "class EmailNotification implements Notification {\n    @Override\n    public void send(String message) {\n        System.out.println(\"이메일 발송: \" + message);\n    }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "4. 인터페이스 메서드 구현",
+        "paragraphs": [
+          "구현 클래스는 인터페이스 메서드를 public으로 구현해야 한다. 인터페이스 메서드는 외부 사용 규약이므로 접근 범위를 더 좁게 만들 수 없다.",
+          "@Override를 붙이면 구현 메서드가 인터페이스 메서드를 올바르게 구현했는지 확인할 수 있다."
+        ]
+      },
+      {
+        "heading": "5. 인터페이스 타입 참조",
+        "paragraphs": [
+          "인터페이스도 타입으로 사용할 수 있다. 인터페이스 타입 변수는 해당 인터페이스를 구현한 객체를 참조할 수 있다.",
+          "이 구조는 다형성과 연결되어 구현체를 교체하기 쉬운 코드를 만들 수 있다."
+        ],
+        "examples": [
+          {
+            "title": "인터페이스 타입 사용",
+            "code": "Notification notification = new EmailNotification();\nnotification.send(\"안녕하세요\");"
+          }
+        ]
+      },
+      {
+        "heading": "6. 다중 구현",
+        "paragraphs": [
+          "Java 클래스는 하나의 클래스만 상속할 수 있지만, 인터페이스는 여러 개 구현할 수 있다.",
+          "예를 들어 하나의 클래스가 Printable과 Savable 인터페이스를 동시에 구현할 수 있다."
+        ],
+        "examples": [
+          {
+            "title": "다중 구현",
+            "code": "interface Printable {\n    void print();\n}\n\ninterface Savable {\n    void save();\n}\n\nclass Report implements Printable, Savable {\n    public void print() { }\n    public void save() { }\n}"
+          }
+        ]
+      },
+      {
+        "heading": "7. 인터페이스와 다형성",
+        "paragraphs": [
+          "인터페이스를 사용하면 구현 클래스가 달라도 같은 인터페이스 타입으로 처리할 수 있다. 이는 결합도를 낮추고 확장성을 높인다.",
+          "메서드 매개변수를 인터페이스 타입으로 선언하면 다양한 구현 객체를 받을 수 있다."
+        ]
+      },
+      {
+        "heading": "8. 인터페이스와 설계",
+        "paragraphs": [
+          "인터페이스는 무엇을 할 수 있는지를 정의하고, 어떻게 할지는 구현 클래스에 맡긴다. 이 방식은 역할과 구현을 분리하는 데 도움이 된다.",
+          "구현 방식이 바뀌어도 인터페이스 규약이 유지되면 사용하는 코드는 크게 바뀌지 않는다."
+        ]
+      },
+      {
+        "heading": "9. default 메서드",
+        "paragraphs": [
+          "Java 인터페이스에는 default 메서드를 작성할 수 있다. default 메서드는 인터페이스 안에서 기본 구현을 제공하는 메서드다.",
+          "기존 인터페이스에 기능을 추가하면서 구현 클래스의 수정 부담을 줄이는 데 사용할 수 있다."
+        ]
+      },
+      {
+        "heading": "10. static 메서드",
+        "paragraphs": [
+          "인터페이스에도 static 메서드를 정의할 수 있다. 인터페이스 static 메서드는 인터페이스 이름으로 호출한다.",
+          "공통 유틸리티 성격의 기능을 인터페이스와 함께 제공할 때 사용할 수 있다."
+        ]
+      },
+      {
+        "heading": "11. 상수 필드",
+        "paragraphs": [
+          "인터페이스의 필드는 기본적으로 public static final 성격을 가진다. 따라서 인터페이스에는 변경 가능한 객체 상태를 두는 용도로 필드를 사용하지 않는다.",
+          "상수 정의는 가능하지만, 상태 저장은 클래스에서 처리해야 한다."
+        ]
+      },
+      {
+        "heading": "12. 인터페이스와 추상 클래스 차이",
+        "paragraphs": [
+          "추상 클래스는 공통 상태와 구현을 제공하는 부모 클래스 성격이 강하고, 인터페이스는 기능 규약을 정의하는 성격이 강하다.",
+          "Java 클래스는 추상 클래스를 하나만 상속할 수 있지만 인터페이스는 여러 개 구현할 수 있다."
+        ]
+      },
+      {
+        "heading": "13. 인터페이스 사용 기준",
+        "paragraphs": [
+          "여러 클래스가 같은 기능을 제공해야 하지만 상속 관계로 묶기 어렵다면 인터페이스가 적합하다.",
+          "예를 들어 파일 저장, 출력, 전송 같은 기능은 서로 다른 클래스가 공통으로 구현할 수 있는 역할이다."
+        ]
+      },
+      {
+        "heading": "14. 인터페이스 이름 관례",
+        "paragraphs": [
+          "인터페이스 이름은 역할이 드러나게 작성한다. Runnable, Comparable처럼 able로 끝나는 이름도 많고, Notification처럼 역할 자체를 나타내는 이름도 사용된다.",
+          "이름만 보아도 어떤 기능 규약인지 이해할 수 있어야 한다."
+        ]
+      },
+      {
+        "heading": "15. 인터페이스 핵심 정리",
+        "paragraphs": [
+          "인터페이스는 구현해야 할 기능 규약을 정의하고, 클래스는 implements로 이를 구현한다. 인터페이스 타입을 사용하면 구현체를 유연하게 교체할 수 있다.",
+          "인터페이스는 다형성, 역할 분리, 확장성 높은 설계의 기초가 된다."
+        ]
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "interfaces-q1",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인가?",
+      "choices": {
+        "A": "interface",
+        "B": "class",
+        "C": "extends",
+        "D": "new"
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q2",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인가?",
+      "choices": {
+        "A": "extends",
+        "B": "implements",
+        "C": "return",
+        "D": "private"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q3",
+      "question": "인터페이스의 주된 목적은 무엇인가?",
+      "choices": {
+        "A": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "B": "반복문의 횟수를 정하는 것이다.",
+        "C": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q4",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "private",
+        "B": "protected만 가능",
+        "C": "default만 가능",
+        "D": "public"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q5",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인가?",
+      "choices": {
+        "A": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "B": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "C": "인터페이스는 타입으로 사용할 수 없다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q6",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인가?",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "그 인터페이스를 구현한 클래스의 객체이다.",
+        "C": "항상 null만 가능하다.",
+        "D": "구현하지 않은 모든 객체이다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q7",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "class",
+        "B": "extends",
+        "C": "interface",
+        "D": "new"
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q8",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "return",
+        "C": "private",
+        "D": "implements"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q9",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "B": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "C": "반복문의 횟수를 정하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q10",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "public",
+        "C": "protected만 가능",
+        "D": "default만 가능"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q11",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "B": "인터페이스는 타입으로 사용할 수 없다.",
+        "C": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q12",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "항상 null만 가능하다.",
+        "C": "구현하지 않은 모든 객체이다.",
+        "D": "그 인터페이스를 구현한 클래스의 객체이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q13",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "interface",
+        "B": "class",
+        "C": "extends",
+        "D": "new"
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q14",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "implements",
+        "C": "return",
+        "D": "private"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q15",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "B": "반복문의 횟수를 정하는 것이다.",
+        "C": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q16",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "protected만 가능",
+        "C": "default만 가능",
+        "D": "public"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q17",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "B": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "C": "인터페이스는 타입으로 사용할 수 없다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q18",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "그 인터페이스를 구현한 클래스의 객체이다.",
+        "C": "항상 null만 가능하다.",
+        "D": "구현하지 않은 모든 객체이다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q19",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "class",
+        "B": "extends",
+        "C": "interface",
+        "D": "new"
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q20",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "return",
+        "C": "private",
+        "D": "implements"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q21",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "B": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "C": "반복문의 횟수를 정하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q22",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "public",
+        "C": "protected만 가능",
+        "D": "default만 가능"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q23",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "B": "인터페이스는 타입으로 사용할 수 없다.",
+        "C": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q24",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "항상 null만 가능하다.",
+        "C": "구현하지 않은 모든 객체이다.",
+        "D": "그 인터페이스를 구현한 클래스의 객체이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q25",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "interface",
+        "B": "class",
+        "C": "extends",
+        "D": "new"
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q26",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "implements",
+        "C": "return",
+        "D": "private"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q27",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "B": "반복문의 횟수를 정하는 것이다.",
+        "C": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q28",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "protected만 가능",
+        "C": "default만 가능",
+        "D": "public"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q29",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "B": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "C": "인터페이스는 타입으로 사용할 수 없다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q30",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "그 인터페이스를 구현한 클래스의 객체이다.",
+        "C": "항상 null만 가능하다.",
+        "D": "구현하지 않은 모든 객체이다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q31",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "class",
+        "B": "extends",
+        "C": "interface",
+        "D": "new"
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q32",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "return",
+        "C": "private",
+        "D": "implements"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q33",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "B": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "C": "반복문의 횟수를 정하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q34",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "public",
+        "C": "protected만 가능",
+        "D": "default만 가능"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q35",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "B": "인터페이스는 타입으로 사용할 수 없다.",
+        "C": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q36",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "항상 null만 가능하다.",
+        "C": "구현하지 않은 모든 객체이다.",
+        "D": "그 인터페이스를 구현한 클래스의 객체이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q37",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "interface",
+        "B": "class",
+        "C": "extends",
+        "D": "new"
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q38",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "implements",
+        "C": "return",
+        "D": "private"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q39",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "B": "반복문의 횟수를 정하는 것이다.",
+        "C": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q40",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "protected만 가능",
+        "C": "default만 가능",
+        "D": "public"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q41",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "B": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "C": "인터페이스는 타입으로 사용할 수 없다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q42",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "그 인터페이스를 구현한 클래스의 객체이다.",
+        "C": "항상 null만 가능하다.",
+        "D": "구현하지 않은 모든 객체이다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q43",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "class",
+        "B": "extends",
+        "C": "interface",
+        "D": "new"
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q44",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "return",
+        "C": "private",
+        "D": "implements"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q45",
+      "question": "인터페이스의 주된 목적은 무엇인지 고르시오.",
+      "choices": {
+        "A": "구현 클래스가 제공해야 할 기능 규약을 정의하는 것이다.",
+        "B": "객체의 모든 필드를 자동 초기화하는 것이다.",
+        "C": "반복문의 횟수를 정하는 것이다.",
+        "D": "파일명을 변경하는 것이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 역할과 구현을 분리하는 설계 도구다.",
+      "analysis": "인터페이스 타입을 사용하면 구현체 교체가 쉬워진다."
+    },
+    {
+      "id": "interfaces-q46",
+      "question": "인터페이스 구현 메서드의 접근 제어자로 적절한 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "private",
+        "B": "public",
+        "C": "protected만 가능",
+        "D": "default만 가능"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인터페이스 메서드 구현은 public으로 제공해야 한다.",
+      "analysis": "인터페이스는 외부 사용 규약이므로 접근 범위를 좁힐 수 없다."
+    },
+    {
+      "id": "interfaces-q47",
+      "question": "Java에서 인터페이스에 대한 설명으로 옳은 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "하나의 클래스는 인터페이스를 하나만 구현할 수 있다.",
+        "B": "인터페이스는 타입으로 사용할 수 없다.",
+        "C": "하나의 클래스가 여러 인터페이스를 구현할 수 있다.",
+        "D": "인터페이스에는 메서드를 선언할 수 없다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. Java는 인터페이스 다중 구현을 지원한다.",
+      "analysis": "클래스 다중 상속과 인터페이스 다중 구현을 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q48",
+      "question": "인터페이스 타입 변수에 담을 수 있는 것은 무엇인지 고르시오.",
+      "choices": {
+        "A": "아무 정수 값이다.",
+        "B": "항상 null만 가능하다.",
+        "C": "구현하지 않은 모든 객체이다.",
+        "D": "그 인터페이스를 구현한 클래스의 객체이다."
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인터페이스도 참조 타입으로 사용된다.",
+      "analysis": "다형성 설계에서 인터페이스 타입 참조가 중요하다."
+    },
+    {
+      "id": "interfaces-q49",
+      "question": "인터페이스를 선언할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "interface",
+        "B": "class",
+        "C": "extends",
+        "D": "new"
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 인터페이스는 interface 키워드로 선언한다.",
+      "analysis": "클래스와 인터페이스 선언 키워드를 구분해야 한다."
+    },
+    {
+      "id": "interfaces-q50",
+      "question": "클래스가 인터페이스를 구현할 때 사용하는 키워드는 무엇인지 고르시오.",
+      "choices": {
+        "A": "extends",
+        "B": "implements",
+        "C": "return",
+        "D": "private"
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. implements는 인터페이스 구현을 나타낸다.",
+      "analysis": "상속의 extends와 인터페이스 구현의 implements를 구분해야 한다."
+    }
+  ],
+  "analysisGuide": {
+    "excellent": "45문항 이상 정답이면 핵심 문법의 의미, 코드 구조, 사용 상황을 안정적으로 이해한 수준이다. 예제 코드를 직접 변형하면서 문법 선택 이유를 설명하는 단계로 확장한다.",
+    "good": "35~44문항 정답이면 주요 개념은 이해했지만 세부 규칙이나 오류 상황에서 혼동이 남아 있는 수준이다. 오답 문항의 예제 코드를 직접 실행해 결과를 확인한다.",
+    "basic": "25~34문항 정답이면 단원의 기본 용어는 알고 있으나 코드 흐름과 실제 사용 기준을 연결하는 연습이 필요하다. 강의 탭의 예제를 먼저 따라 입력하고 문항을 다시 풀이한다.",
+    "needsReview": "24문항 이하 정답이면 문법 구조와 실행 흐름을 다시 정리해야 한다. 각 섹션의 설명, 예제 코드, 해설을 순서대로 재학습한 뒤 짧은 코드부터 다시 작성한다."
+  }
+}
