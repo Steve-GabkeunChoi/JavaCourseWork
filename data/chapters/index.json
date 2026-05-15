@@ -1,12 +1,28 @@
 {
   "modules": [
-    { "file": "overview.json" },
-    { "file": "variables.json" },
-    { "file": "conditions.json" },
-    { "file": "loops.json" },
-    { "file": "classes.json" },
-    { "file": "constructors.json" },
-    { "file": "encapsulation.json" },
-    { "file": "static-members.json" }
+    {
+      "file": "overview.json"
+    },
+    {
+      "file": "variables.json"
+    },
+    {
+      "file": "conditions.json"
+    },
+    {
+      "file": "loops.json"
+    },
+    {
+      "file": "classes.json"
+    },
+    {
+      "file": "constructors.json"
+    },
+    {
+      "file": "encapsulation.json"
+    },
+    {
+      "file": "static-members.json"
+    }
   ]
 }

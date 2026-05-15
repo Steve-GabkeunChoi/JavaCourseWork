@@ -31,6 +31,12 @@
         "paragraphs": [
           "다음 코드는 나이가 20세 이상인지 검사해 성인 여부를 출력한다. `age >= 20`은 age 값이 20 이상이면 true가 되고, 그렇지 않으면 false가 된다. 조건식이 true이면 if 블록 안의 출력문이 실행된다.",
           "조건문을 읽을 때는 먼저 조건식이 무엇을 검사하는지 확인하고, 그 조건이 true일 때 어떤 코드가 실행되는지 살펴보아야 한다. 조건문은 코드의 실행 여부를 결정하는 문법이므로, 조건식과 실행 블록을 함께 이해해야 한다."
+        ],
+        "examples": [
+          {
+            "title": "if 문으로 성인 여부 판단",
+            "code": "public class Main {\n    public static void main(String[] args) {\n        int age = 21;\n\n        if (age >= 20) {\n            System.out.println(\"성인입니다.\");\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -38,6 +44,12 @@
         "paragraphs": [
           "else 문은 if 조건식이 false일 때 실행할 코드를 작성하는 블록이다. if만 사용하면 조건이 true일 때만 특정 코드를 실행하고, false일 때는 아무 작업도 하지 않는다. 반면 if와 else를 함께 사용하면 조건이 true인 경우와 false인 경우를 모두 처리할 수 있다.",
           "예를 들어 점수가 60점 이상이면 합격, 그렇지 않으면 불합격을 출력해야 한다면 if-else 구조가 적합하다. if 조건이 true이면 if 블록이 실행되고, false이면 else 블록이 실행된다. 둘 중 하나의 블록만 실행되며, 두 블록이 동시에 실행되는 일은 없다."
+        ],
+        "examples": [
+          {
+            "title": "if-else 문으로 합격 여부 판단",
+            "code": "public class Main {\n    public static void main(String[] args) {\n        int score = 75;\n\n        if (score >= 60) {\n            System.out.println(\"합격\");\n        } else {\n            System.out.println(\"불합격\");\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -45,6 +57,12 @@
         "paragraphs": [
           "else if 문은 조건이 여러 개일 때 사용하는 구조다. 하나의 조건만 검사하는 것이 아니라, 첫 번째 조건이 false일 때 두 번째 조건을 검사하고, 두 번째 조건도 false이면 다음 조건을 계속 검사할 수 있다. 성적 등급처럼 범위에 따라 A, B, C, D를 나누는 경우에 자주 사용한다.",
           "if-else if-else 구조에서는 위에서부터 조건을 차례대로 검사한다. 어느 한 조건이 true가 되면 해당 블록이 실행되고, 나머지 else if와 else는 검사하거나 실행하지 않는다. 따라서 조건의 순서가 중요하다. 넓은 조건을 먼저 쓰면 아래의 세부 조건이 실행될 기회를 잃을 수 있다."
+        ],
+        "examples": [
+          {
+            "title": "else if 문으로 등급 판단",
+            "code": "public class Main {\n    public static void main(String[] args) {\n        int score = 85;\n\n        if (score >= 90) {\n            System.out.println(\"A\");\n        } else if (score >= 80) {\n            System.out.println(\"B\");\n        } else if (score >= 70) {\n            System.out.println(\"C\");\n        } else {\n            System.out.println(\"D\");\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -73,6 +91,12 @@
         "paragraphs": [
           "논리 연산자는 여러 조건식을 결합할 때 사용한다. Java에서 대표적인 논리 연산자는 `&&`, `||`, `!`이다. `&&`는 AND 연산자로, 양쪽 조건이 모두 true일 때만 true가 된다. `||`는 OR 연산자로, 양쪽 조건 중 하나라도 true이면 true가 된다. `!`는 NOT 연산자로, true를 false로, false를 true로 뒤집는다.",
           "예를 들어 `age >= 20 && hasTicket == true`는 나이가 20세 이상이고 티켓을 가지고 있어야 true가 된다. `level == \"admin\" || level == \"manager\"`처럼 관리자 또는 매니저인 경우를 허용하는 조건도 만들 수 있다. 논리 연산자를 사용하면 현실의 복합 조건을 코드로 표현할 수 있다."
+        ],
+        "examples": [
+          {
+            "title": "논리 연산자로 복합 조건 판단",
+            "code": "public class Main {\n    public static void main(String[] args) {\n        int age = 25;\n        boolean hasTicket = true;\n\n        if (age >= 20 && hasTicket) {\n            System.out.println(\"입장 가능\");\n        } else {\n            System.out.println(\"입장 불가\");\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -122,6 +146,12 @@
         "paragraphs": [
           "조건문에서 문자열을 비교할 때는 주의가 필요하다. Java에서 기본 자료형의 값 비교에는 `==`를 사용할 수 있지만, 문자열 내용 비교에는 일반적으로 `equals()` 메서드를 사용한다. 예를 들어 이름이 \"admin\"인지 확인하려면 `role.equals(\"admin\")`처럼 작성한다.",
           "`role == \"admin\"`처럼 작성하면 문자열의 내용이 아니라 참조 관계를 비교하는 문제가 생길 수 있다. 초보 단계에서는 문자열의 실제 내용을 비교할 때는 `equals()`를 사용한다고 기억하면 된다. 단, role 값이 null일 가능성이 있다면 `\"admin\".equals(role)`처럼 상수 문자열에서 equals를 호출하는 방식이 더 안전하다."
+        ],
+        "examples": [
+          {
+            "title": "문자열 비교와 equals",
+            "code": "public class Main {\n    public static void main(String[] args) {\n        String role = \"admin\";\n\n        if (\"admin\".equals(role)) {\n            System.out.println(\"관리자입니다.\");\n        } else {\n            System.out.println(\"일반 사용자입니다.\");\n        }\n    }\n}"
+          }
         ]
       },
       {
@@ -151,28 +181,6 @@
           "조건문은 조건식의 결과에 따라 실행할 코드를 선택하는 문법이다. if는 첫 조건을 검사하고, else if는 추가 조건을 검사하며, else는 앞의 모든 조건이 false일 때 실행된다. 조건식은 반드시 boolean 결과를 만들어야 하며, 비교 연산자와 논리 연산자를 사용해 다양한 판단 기준을 만들 수 있다.",
           "조건문을 잘 작성하려면 조건식, 실행 블록, 조건 순서, 중괄호, 들여쓰기를 함께 고려해야 한다. 특히 `=`와 `==`의 차이, 문자열 비교에서 equals 사용, `&&`와 `||`의 차이, else가 조건식을 갖지 않는다는 점은 반드시 익혀야 한다. 조건문은 프로그램의 흐름을 나누는 핵심 도구이므로 이후 모든 Java 학습에서 반복해서 사용된다."
         ]
-      }
-    ],
-    "examples": [
-      {
-        "title": "if 문으로 성인 여부 판단",
-        "code": "public class Main {\n    public static void main(String[] args) {\n        int age = 21;\n\n        if (age >= 20) {\n            System.out.println(\"성인입니다.\");\n        }\n    }\n}"
-      },
-      {
-        "title": "if-else 문으로 합격 여부 판단",
-        "code": "public class Main {\n    public static void main(String[] args) {\n        int score = 75;\n\n        if (score >= 60) {\n            System.out.println(\"합격\");\n        } else {\n            System.out.println(\"불합격\");\n        }\n    }\n}"
-      },
-      {
-        "title": "else if 문으로 등급 판단",
-        "code": "public class Main {\n    public static void main(String[] args) {\n        int score = 85;\n\n        if (score >= 90) {\n            System.out.println(\"A\");\n        } else if (score >= 80) {\n            System.out.println(\"B\");\n        } else if (score >= 70) {\n            System.out.println(\"C\");\n        } else {\n            System.out.println(\"D\");\n        }\n    }\n}"
-      },
-      {
-        "title": "논리 연산자로 복합 조건 판단",
-        "code": "public class Main {\n    public static void main(String[] args) {\n        int age = 25;\n        boolean hasTicket = true;\n\n        if (age >= 20 && hasTicket) {\n            System.out.println(\"입장 가능\");\n        } else {\n            System.out.println(\"입장 불가\");\n        }\n    }\n}"
-      },
-      {
-        "title": "문자열 비교와 equals",
-        "code": "public class Main {\n    public static void main(String[] args) {\n        String role = \"admin\";\n\n        if (\"admin\".equals(role)) {\n            System.out.println(\"관리자입니다.\");\n        } else {\n            System.out.println(\"일반 사용자입니다.\");\n        }\n    }\n}"
       }
     ]
   },
