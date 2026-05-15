@@ -4,6 +4,7 @@
     { "file": "variables.json" },
     { "file": "conditions.json" },
     { "file": "loops.json" },
-    { "file": "classes.json" }
+    { "file": "classes.json" },
+    { "file": "constructors.json" }
   ]
 }
