@@ -2,927 +2,828 @@
   "id": "static-members",
   "order": 8,
   "title": "static",
-  "summary": "static 필드와 static 메서드를 통해 클래스 소속 멤버와 객체 소속 멤버의 차이를 이해한다.",
+  "summary": "static을 이용해 클래스 소속 필드와 메서드를 정의하고, 인스턴스 멤버와 클래스 멤버의 차이를 이해한다.",
   "lecture": {
     "sections": [
       {
         "heading": "static을 배우는 이유",
         "paragraphs": [
-          "클래스와 객체를 배우면 객체마다 필드와 메서드를 가질 수 있다는 점을 이해하게 된다. 그런데 모든 데이터와 기능이 반드시 객체마다 따로 존재해야 하는 것은 아니다. 어떤 값은 객체가 몇 개 만들어지든 클래스 전체에서 하나만 관리하는 것이 더 적절하고, 어떤 기능은 객체를 만들지 않아도 사용할 수 있어야 한다. Java에서는 이런 경우에 static을 사용한다.",
-          "static은 클래스에 소속되는 멤버를 만들 때 사용하는 키워드다. 일반 필드와 일반 메서드는 객체를 생성한 뒤 객체를 통해 사용하지만, static 필드와 static 메서드는 클래스 이름을 통해 사용할 수 있다. 따라서 static을 이해하려면 먼저 객체에 소속되는 인스턴스 멤버와 클래스에 소속되는 정적 멤버를 구분해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "객체 생성 없이 static 메서드 호출",
-            "code": "class MathTool {\n    static int add(int a, int b) {\n        return a + b;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        int result = MathTool.add(10, 20);\n        System.out.println(result);\n    }\n}"
-          }
+          "클래스와 객체를 학습하면 객체를 생성한 뒤 필드와 메서드를 사용하는 구조를 이해하게 된다. 그런데 모든 값과 기능이 반드시 객체마다 따로 존재해야 하는 것은 아니다. 여러 객체가 함께 공유해야 하는 값이나, 객체를 만들지 않고도 사용할 수 있는 기능이 필요할 때가 있다. 이때 사용하는 문법이 static이다.",
+          "static은 특정 객체 하나에 소속되는 것이 아니라 클래스 자체에 소속되는 멤버를 만들 때 사용한다. 객체를 여러 개 생성해도 static 필드는 클래스 기준으로 하나만 존재하며, static 메서드는 객체를 생성하지 않아도 클래스 이름으로 호출할 수 있다. 따라서 static은 객체 단위의 데이터와 클래스 단위의 데이터를 구분하는 중요한 기준이 된다."
         ]
       },
       {
-        "heading": "인스턴스 멤버의 의미",
+        "heading": "인스턴스 멤버와 static 멤버",
         "paragraphs": [
-          "인스턴스 멤버는 객체에 소속되는 필드나 메서드다. 클래스를 바탕으로 객체를 만들면 각 객체는 자기만의 필드 값을 가질 수 있다. 예를 들어 학생 객체마다 이름과 나이가 다를 수 있고, 계좌 객체마다 잔액이 다를 수 있다. 이런 값은 객체마다 달라야 하므로 일반 필드, 즉 인스턴스 필드로 작성한다.",
-          "인스턴스 메서드는 객체의 상태를 사용하거나 변경하는 동작을 표현한다. 예를 들어 계좌의 입금 메서드는 해당 계좌 객체의 잔액을 증가시켜야 하므로 객체가 있어야 의미가 있다. 이처럼 객체별 상태와 관련된 기능은 인스턴스 메서드로 작성하는 것이 적절하다."
-        ],
-        "examples": [
-          {
-            "title": "객체마다 다른 인스턴스 필드",
-            "code": "class Student {\n    String name;\n    int age;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student s1 = new Student();\n        s1.name = \"Kim\";\n        s1.age = 20;\n\n        Student s2 = new Student();\n        s2.name = \"Lee\";\n        s2.age = 22;\n\n        System.out.println(s1.name + \" \" + s1.age);\n        System.out.println(s2.name + \" \" + s2.age);\n    }\n}"
-          }
+          "Java 클래스 안에 작성하는 필드와 메서드는 크게 인스턴스 멤버와 static 멤버로 나눌 수 있다. 인스턴스 멤버는 객체를 생성해야 사용할 수 있는 필드와 메서드다. 객체마다 별도의 값을 가져야 하는 이름, 나이, 잔액 같은 데이터는 인스턴스 필드로 두는 것이 일반적이다.",
+          "static 멤버는 객체가 아니라 클래스에 소속된다. static 필드는 객체마다 따로 생기는 것이 아니라 클래스 단위로 하나만 존재한다. static 메서드도 객체 참조 변수가 아니라 클래스 이름으로 호출하는 것이 일반적이다. 이 차이를 이해하지 못하면 객체마다 따로 관리해야 할 값을 실수로 공유하거나, 반대로 공유해야 할 값을 불필요하게 객체마다 중복 저장하게 된다."
         ]
       },
       {
         "heading": "static 필드의 의미",
         "paragraphs": [
-          "static 필드는 객체가 아니라 클래스에 소속되는 필드다. 클래스가 메모리에 로딩될 때 하나의 공간으로 준비되고, 그 클래스로 만든 여러 객체가 같은 static 필드를 공유한다. 객체마다 따로 가져야 하는 값에는 적합하지 않고, 클래스 전체에서 공통으로 관리해야 하는 값에 적합하다.",
-          "예를 들어 생성된 객체 수를 세는 값은 객체마다 따로 존재하면 의미가 약해진다. 학생 객체가 몇 개 생성되었는지를 세려면 모든 객체가 공유하는 하나의 카운트 값이 필요하다. 이때 static 필드를 사용하면 클래스 차원에서 공통 값을 관리할 수 있다."
-        ],
-        "examples": [
-          {
-            "title": "static 필드로 객체 수 세기",
-            "code": "class Student {\n    static int count = 0;\n    String name;\n\n    Student(String name) {\n        this.name = name;\n        count++;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new Student(\"Kim\");\n        new Student(\"Lee\");\n        new Student(\"Park\");\n\n        System.out.println(Student.count);\n    }\n}"
-          }
+          "static 필드는 클래스에 소속된 필드다. 객체를 여러 개 만들어도 static 필드는 하나만 존재하며, 모든 객체가 같은 값을 공유한다. 예를 들어 회원 객체가 생성될 때마다 전체 회원 수를 세고 싶다면 각 회원 객체가 count 값을 따로 갖는 것보다 클래스 수준에서 하나의 count 값을 공유하는 것이 적절하다.",
+          "static 필드는 보통 클래스 이름으로 접근한다. 문법적으로 객체 참조 변수를 통해 접근할 수도 있지만, static 필드가 객체 소속처럼 보이기 때문에 권장되지 않는다. static 필드의 소속을 분명히 드러내려면 `ClassName.fieldName` 형태로 작성하는 것이 좋다."
         ]
       },
       {
         "heading": "static 메서드의 의미",
         "paragraphs": [
-          "static 메서드는 객체 생성 없이 클래스 이름으로 호출할 수 있는 메서드다. 특정 객체의 필드 값을 사용하지 않고, 전달받은 값만으로 결과를 계산하는 기능에 자주 사용된다. 대표적으로 수학 계산, 문자열 변환, 공통 검증 기능처럼 객체 상태와 무관한 기능은 static 메서드로 만들 수 있다.",
-          "static 메서드는 객체 없이 실행되므로 인스턴스 필드에 직접 접근할 수 없다. 인스턴스 필드는 객체가 만들어져야 존재하기 때문이다. static 메서드 안에서 인스턴스 필드를 사용하려면 객체를 먼저 생성하거나, 외부에서 객체를 전달받아야 한다. 이 제한은 static과 인스턴스의 소속이 다르기 때문에 발생한다."
-        ],
-        "examples": [
-          {
-            "title": "static 메서드와 유틸리티 기능",
-            "code": "class GradeTool {\n    static boolean isPass(int score) {\n        return score >= 60;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(GradeTool.isPass(75));\n        System.out.println(GradeTool.isPass(45));\n    }\n}"
-          }
-        ]
-      },
-      {
-        "heading": "클래스 이름으로 접근하는 방식",
-        "paragraphs": [
-          "static 멤버는 객체에 소속된 것이 아니라 클래스에 소속된 것이므로 클래스 이름으로 접근하는 것이 원칙이다. 예를 들어 `Counter.count` 또는 `MathTool.add(1, 2)`처럼 작성하면 해당 멤버가 클래스 차원의 멤버라는 의미가 명확해진다.",
-          "Java에서는 객체 참조 변수를 통해 static 멤버에 접근하는 코드가 문법적으로 허용되는 경우도 있다. 그러나 이런 방식은 static 멤버가 마치 객체별로 존재하는 것처럼 오해를 줄 수 있으므로 좋지 않다. static 멤버는 클래스 이름으로 접근하는 습관을 들이는 것이 좋다."
-        ],
-        "examples": [
-          {
-            "title": "static 필드 접근 권장 방식",
-            "code": "class Counter {\n    static int count = 10;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(Counter.count);\n    }\n}"
-          }
+          "static 메서드는 객체를 생성하지 않고 클래스 이름으로 호출할 수 있는 메서드다. 대표적인 예는 `Math.max()`, `Math.random()` 같은 메서드다. 이 메서드들은 특정 객체의 상태를 사용하기보다 전달받은 값이나 클래스 수준의 기능만으로 결과를 만든다.",
+          "static 메서드는 인스턴스 필드를 직접 사용할 수 없다. 인스턴스 필드는 객체가 생성되어야 존재하는 값인데, static 메서드는 객체 없이도 호출될 수 있기 때문이다. 따라서 static 메서드 안에서 인스턴스 필드나 인스턴스 메서드를 사용하려면 객체를 먼저 생성하거나, 객체 참조를 매개변수로 받아야 한다."
         ]
       },
       {
         "heading": "main 메서드와 static",
         "paragraphs": [
-          "Java 프로그램의 시작점인 `public static void main(String[] args)`에도 static이 사용된다. 프로그램이 시작되는 순간에는 아직 개발자가 만든 객체가 생성되기 전이다. JVM은 객체를 먼저 만들지 않고도 main 메서드를 호출해야 하므로 main 메서드는 static으로 선언된다.",
-          "main 메서드가 static이라는 점은 Java 실행 구조를 이해하는 데 중요하다. main 메서드 안에서 같은 클래스의 인스턴스 필드나 인스턴스 메서드를 바로 사용할 수 없는 이유도 main이 static 메서드이기 때문이다. 인스턴스 멤버를 사용하려면 main 안에서 객체를 생성한 뒤 그 객체를 통해 접근해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "main에서 객체를 생성한 뒤 인스턴스 메서드 호출",
-            "code": "class Printer {\n    void printMessage() {\n        System.out.println(\"인스턴스 메서드 호출\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Printer printer = new Printer();\n        printer.printMessage();\n    }\n}"
-          }
+          "Java 프로그램의 시작점인 `public static void main(String[] args)`에도 static이 붙어 있다. 프로그램이 시작되는 시점에는 아직 사용자가 만든 객체가 생성되어 있지 않다. JVM은 객체 생성 없이도 main 메서드를 호출해야 하므로 main 메서드는 static 형태로 선언된다.",
+          "main 메서드가 static이라는 사실은 Java 실행 구조와 연결된다. 프로그램 실행 전에 JVM은 지정된 클래스에서 main 메서드를 찾고, 객체를 만들지 않은 상태에서 해당 메서드를 호출한다. 그래서 main 메서드 안에서 같은 클래스의 인스턴스 필드를 직접 사용하려고 하면 오류가 발생할 수 있다."
         ]
       },
       {
-        "heading": "static과 메모리 관점",
+        "heading": "클래스 이름으로 접근하는 방식",
         "paragraphs": [
-          "정확한 내부 구현을 모두 알 필요는 없지만, static 멤버와 인스턴스 멤버가 메모리에서 다르게 관리된다는 점은 이해해야 한다. 인스턴스 필드는 객체가 생성될 때 객체별로 준비된다. 반면 static 필드는 클래스가 로딩될 때 클래스 차원에서 하나만 준비된다.",
-          "이 차이 때문에 static 필드는 모든 객체가 공유한다. 공유된다는 말은 한 곳에서 값을 바꾸면 다른 곳에서 읽을 때도 바뀐 값이 보인다는 뜻이다. 따라서 static 필드는 편리하지만 무분별하게 사용하면 여러 코드가 같은 값을 바꾸면서 예측하기 어려운 문제가 발생할 수 있다."
-        ],
-        "examples": [
-          {
-            "title": "static 필드 공유 확인",
-            "code": "class Counter {\n    static int count = 0;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Counter c1 = new Counter();\n        Counter c2 = new Counter();\n\n        Counter.count = 5;\n        System.out.println(Counter.count);\n    }\n}"
-          }
+          "static 멤버는 클래스 소속이므로 클래스 이름으로 접근하는 것이 기본적인 사용 방식이다. 예를 들어 `Counter.count`는 Counter 클래스의 static 필드 count에 접근하는 표현이다. 객체 참조 변수로 접근하면 코드가 동작할 수는 있지만, 읽는 사람에게 해당 값이 객체별 값인지 클래스 공유 값인지 혼동을 줄 수 있다.",
+          "좋은 코드는 문법적으로만 맞는 것이 아니라 의미가 명확해야 한다. static 멤버를 클래스 이름으로 접근하면 해당 멤버가 객체별 상태가 아니라 클래스 수준에서 공유되는 값이나 기능임을 분명히 나타낼 수 있다."
         ]
       },
       {
-        "heading": "인스턴스 필드와 static 필드 비교",
+        "heading": "static 필드가 공유되는 구조",
         "paragraphs": [
-          "인스턴스 필드는 객체별로 다른 값을 가져야 할 때 사용한다. 학생 이름, 계좌 잔액, 상품 가격처럼 객체마다 달라질 수 있는 정보는 인스턴스 필드가 적절하다. 반면 static 필드는 클래스 전체에서 하나만 관리해야 하는 값에 사용한다. 생성된 객체 수, 공통 상수, 공통 설정값 등이 대표적이다.",
-          "중요한 판단 기준은 값의 소유자가 누구인지다. 값이 특정 객체의 상태를 나타내면 인스턴스 필드로 두어야 한다. 값이 객체 하나의 상태가 아니라 클래스 전체의 공통 정보라면 static 필드로 둘 수 있다. 이 기준을 명확히 하지 않으면 모든 객체가 같은 값을 공유해 버리는 설계 오류가 발생할 수 있다."
-        ],
-        "examples": [
-          {
-            "title": "인스턴스 필드와 static 필드 함께 사용",
-            "code": "class Product {\n    static int totalCount = 0;\n    String name;\n\n    Product(String name) {\n        this.name = name;\n        totalCount++;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Product p1 = new Product(\"Keyboard\");\n        Product p2 = new Product(\"Mouse\");\n\n        System.out.println(p1.name);\n        System.out.println(p2.name);\n        System.out.println(Product.totalCount);\n    }\n}"
-          }
+          "static 필드는 모든 객체가 공유한다. 객체 A가 static 필드 값을 변경하면 객체 B를 통해 확인해도 변경된 값이 보인다. 실제로 값이 객체 안에 각각 존재하는 것이 아니라 클래스 영역에 하나만 존재하기 때문이다.",
+          "이 특성은 전체 개수, 공통 설정, 공통 상수 같은 값을 관리할 때 유용하다. 하지만 객체마다 달라야 하는 값을 static으로 선언하면 모든 객체가 같은 값을 공유하게 되어 잘못된 결과가 발생한다. 예를 들어 학생 이름을 static으로 만들면 모든 학생 객체가 같은 이름을 공유하게 되므로 설계상 부적절하다."
+        ]
+      },
+      {
+        "heading": "인스턴스 필드가 객체마다 따로 존재하는 구조",
+        "paragraphs": [
+          "인스턴스 필드는 객체마다 따로 존재한다. 같은 클래스로 여러 객체를 생성하더라도 각 객체는 자신의 인스턴스 필드 값을 가진다. 학생 객체의 이름, 나이, 점수처럼 객체마다 달라야 하는 데이터는 인스턴스 필드로 선언해야 한다.",
+          "인스턴스 필드와 static 필드의 차이는 객체 지향 설계의 기본이다. 데이터가 개별 객체의 상태인지, 모든 객체가 공유해야 하는 클래스 수준의 상태인지 구분해야 한다. 이 구분이 명확해야 클래스 구조가 안정적으로 설계된다."
         ]
       },
       {
         "heading": "static 메서드에서 인스턴스 멤버를 직접 사용할 수 없는 이유",
         "paragraphs": [
-          "static 메서드는 객체 없이 실행될 수 있다. 하지만 인스턴스 필드와 인스턴스 메서드는 객체가 생성되어야 사용할 수 있다. 따라서 static 메서드 안에서 인스턴스 필드 이름을 바로 쓰면 어떤 객체의 필드인지 알 수 없기 때문에 오류가 발생한다.",
-          "이 문제를 해결하려면 객체를 생성한 뒤 객체 참조 변수를 통해 인스턴스 멤버에 접근해야 한다. 이 규칙은 main 메서드에서도 그대로 적용된다. main이 static이기 때문에 main 안에서 인스턴스 멤버를 사용하려면 객체를 먼저 만들어야 한다."
-        ],
-        "examples": [
-          {
-            "title": "static 메서드에서 객체 생성 후 인스턴스 필드 사용",
-            "code": "class Person {\n    String name = \"Kim\";\n\n    static void printName() {\n        Person person = new Person();\n        System.out.println(person.name);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Person.printName();\n    }\n}"
-          }
+          "static 메서드는 객체 없이 호출될 수 있다. 반면 인스턴스 필드와 인스턴스 메서드는 객체가 생성되어야 사용할 수 있다. 그래서 static 메서드 안에서 인스턴스 필드를 바로 사용하면 어떤 객체의 필드를 의미하는지 알 수 없게 된다.",
+          "이 문제를 해결하려면 static 메서드 안에서 객체를 생성한 뒤 객체 참조 변수를 통해 인스턴스 멤버에 접근해야 한다. 또는 필요한 값을 매개변수로 전달받아 static 메서드가 객체 상태에 의존하지 않도록 작성할 수 있다."
         ]
       },
       {
-        "heading": "인스턴스 메서드에서 static 멤버를 사용할 수 있는 이유",
+        "heading": "static 메서드가 적합한 경우",
         "paragraphs": [
-          "인스턴스 메서드는 객체가 생성된 뒤 호출된다. 객체가 생성되었다는 것은 이미 클래스 정보도 로딩되어 있다는 뜻이므로, 인스턴스 메서드 안에서는 static 필드나 static 메서드에 접근할 수 있다. 다만 접근할 때는 클래스 이름을 사용하는 것이 의미를 명확하게 한다.",
-          "인스턴스 메서드가 static 멤버를 사용할 수 있다고 해서 모든 공통 값을 static으로 만드는 것은 좋지 않다. static은 공유 상태를 만들기 때문에 값 변경의 영향 범위가 넓다. 공통으로 유지해야 하는 정보인지, 객체별로 달라야 하는 정보인지 먼저 판단해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "인스턴스 메서드에서 static 필드 출력",
-            "code": "class Member {\n    static String serviceName = \"Learning App\";\n    String name;\n\n    Member(String name) {\n        this.name = name;\n    }\n\n    void printInfo() {\n        System.out.println(Member.serviceName + \": \" + name);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Member member = new Member(\"Kim\");\n        member.printInfo();\n    }\n}"
-          }
+          "static 메서드는 특정 객체의 상태를 사용하지 않는 기능에 적합하다. 예를 들어 두 숫자 중 큰 값을 구하거나, 문자열이 비어 있는지 검사하거나, 단위 변환을 수행하는 기능은 특정 객체의 필드에 의존하지 않을 수 있다. 이런 기능은 static 메서드로 만들면 객체 생성 없이 바로 사용할 수 있어 편리하다.",
+          "하지만 모든 메서드를 static으로 만드는 것은 좋지 않다. 객체의 상태를 읽거나 변경해야 하는 기능은 인스턴스 메서드로 작성해야 한다. static 메서드를 과도하게 사용하면 객체 지향 설계의 장점이 줄어들고, 데이터와 기능이 분리되어 코드 구조가 약해질 수 있다."
         ]
       },
       {
-        "heading": "static final 상수",
+        "heading": "상수와 static final",
         "paragraphs": [
-          "변하지 않는 공통 값은 `static final`로 선언하는 경우가 많다. static은 클래스 전체에서 공유된다는 뜻이고, final은 한 번 값이 정해지면 다시 바꿀 수 없다는 뜻이다. 따라서 `static final`은 모든 객체가 함께 사용하는 변경 불가능한 상수를 표현할 때 적합하다.",
-          "상수 이름은 보통 모두 대문자로 쓰고 단어 사이를 밑줄로 구분한다. 예를 들어 최대 로그인 시도 횟수는 `MAX_LOGIN_COUNT`, 기본 세율은 `DEFAULT_TAX_RATE`처럼 작성할 수 있다. 이 관례를 사용하면 코드에서 해당 값이 상수라는 점을 쉽게 알아볼 수 있다."
-        ],
-        "examples": [
-          {
-            "title": "static final 상수 사용",
-            "code": "class Config {\n    static final int MAX_LOGIN_COUNT = 5;\n    static final double DEFAULT_TAX_RATE = 0.1;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(Config.MAX_LOGIN_COUNT);\n        System.out.println(Config.DEFAULT_TAX_RATE);\n    }\n}"
-          }
+          "변하지 않는 공통 값을 표현할 때는 `static final`을 함께 사용할 수 있다. `static`은 클래스에 소속된다는 의미이고, `final`은 한 번 초기화한 값을 바꿀 수 없다는 의미다. 따라서 `static final` 필드는 클래스 수준에서 공유되는 변경 불가능한 값이다.",
+          "상수 이름은 보통 대문자와 밑줄을 사용한다. 예를 들어 원주율은 `PI`, 최대 접속자 수는 `MAX_USER_COUNT`처럼 작성한다. 상수는 프로그램 전체에서 의미 있는 기준값을 명확하게 표현하고, 같은 값을 여러 곳에 반복해서 쓰는 문제를 줄이는 데 도움이 된다."
         ]
       },
       {
-        "heading": "상수와 일반 static 필드의 차이",
+        "heading": "static 초기화",
         "paragraphs": [
-          "일반 static 필드는 클래스 전체에서 공유되지만 값을 변경할 수 있다. 반면 static final 필드는 공유되면서도 값을 변경할 수 없다. 변경 가능한 static 필드는 여러 코드에서 값이 바뀔 수 있으므로 사용에 주의해야 한다. 반대로 static final 상수는 값이 고정되어 있어 비교적 안전하게 사용할 수 있다.",
-          "예를 들어 원주율, 프로그램 이름, 최대 제한값처럼 변하지 않는 기준값은 static final로 선언하는 것이 좋다. 반면 로그인한 사용자 수처럼 실행 중 바뀌어야 하는 값은 static 필드로 둘 수 있지만, 어디에서 값이 바뀌는지 명확하게 관리해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "변경 가능한 static 필드와 변경 불가능한 상수",
-            "code": "class AppState {\n    static int loginUserCount = 0;\n    static final String APP_NAME = \"Java Quiz\";\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        AppState.loginUserCount++;\n        System.out.println(AppState.loginUserCount);\n        System.out.println(AppState.APP_NAME);\n    }\n}"
-          }
+          "static 필드는 클래스가 메모리에 로딩될 때 준비된다. 단순한 값은 선언과 동시에 초기화할 수 있고, 여러 줄의 초기화 작업이 필요하다면 static 초기화 블록을 사용할 수도 있다. static 초기화 블록은 클래스가 처음 사용될 때 한 번 실행된다.",
+          "개요 수준에서는 static 초기화 블록을 자주 사용하지 않지만, static 필드가 객체 생성보다 먼저 준비된다는 점은 중요하다. static 멤버는 객체의 생성 여부와 무관하게 클래스 기준으로 관리된다."
         ]
       },
       {
-        "heading": "유틸리티 클래스와 static 메서드",
+        "heading": "객체 수를 세는 static 필드",
         "paragraphs": [
-          "유틸리티 클래스는 객체의 상태를 저장하기보다 공통 기능을 모아 두는 클래스다. 예를 들어 숫자 계산, 문자열 검사, 날짜 포맷 변환 같은 기능은 특정 객체의 상태와 무관하게 입력값만으로 결과를 만들 수 있다. 이런 기능은 static 메서드로 작성하면 객체 생성 없이 간단히 호출할 수 있다.",
-          "다만 모든 메서드를 static으로 만들면 객체 지향 설계의 장점을 활용하기 어렵다. static 메서드는 상태를 가지지 않는 단순 기능에 적합하고, 객체의 상태와 동작을 함께 표현해야 하는 경우에는 인스턴스 메서드가 적합하다."
-        ],
-        "examples": [
-          {
-            "title": "문자열 검사용 유틸리티 클래스",
-            "code": "class StringUtil {\n    static boolean isEmpty(String text) {\n        return text == null || text.length() == 0;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(StringUtil.isEmpty(\"\"));\n        System.out.println(StringUtil.isEmpty(\"Java\"));\n    }\n}"
-          }
+          "static 필드의 대표적인 예는 생성된 객체 수를 세는 카운터다. 객체가 생성될 때마다 생성자에서 static 필드 값을 증가시키면 전체 객체 생성 횟수를 기록할 수 있다. 이 값은 객체마다 따로 존재하면 안 되고 클래스 전체에서 하나만 존재해야 하므로 static이 적합하다.",
+          "이 구조를 통해 static 필드가 공유 상태를 표현한다는 점을 확인할 수 있다. 객체를 여러 개 생성해도 count 값은 각 객체 안에 별도로 저장되는 것이 아니라 클래스 수준에서 누적된다."
         ]
       },
       {
-        "heading": "static import의 기본 개념",
+        "heading": "static과 메모리 관점",
         "paragraphs": [
-          "Java에는 static 멤버를 클래스 이름 없이 사용할 수 있게 하는 static import 문법이 있다. 예를 들어 `Math.max()`를 자주 사용한다면 static import를 통해 `max()`처럼 호출할 수 있다. 다만 초급 단계에서는 클래스 이름을 함께 쓰는 방식이 더 명확하다.",
-          "static import는 코드를 짧게 만들 수 있지만, 어떤 클래스의 static 멤버인지 한눈에 보이지 않을 수 있다. 그래서 학습 초기에는 static import보다 클래스 이름으로 접근하는 방식을 우선 익히는 것이 좋다."
-        ],
-        "examples": [
-          {
-            "title": "Math 클래스의 static 메서드 사용",
-            "code": "public class Main {\n    public static void main(String[] args) {\n        int maxValue = Math.max(10, 20);\n        double randomValue = Math.random();\n\n        System.out.println(maxValue);\n        System.out.println(randomValue);\n    }\n}"
-          }
+          "Java를 처음 배울 때 메모리 구조를 깊게 알 필요는 없지만, static 멤버와 인스턴스 멤버의 저장 위치가 다르게 관리된다는 점은 이해해야 한다. 인스턴스 필드는 객체가 생성될 때 객체와 함께 관리되고, static 필드는 클래스가 로딩될 때 클래스 수준에서 관리된다.",
+          "이 차이 때문에 static 필드는 프로그램 전체에서 오래 유지될 수 있다. 공유 설정이나 상수처럼 오래 유지되어야 하는 값에는 적합하지만, 사용자별 상태나 요청별 데이터처럼 계속 달라지는 값을 static으로 관리하면 문제가 발생할 수 있다."
         ]
       },
       {
-        "heading": "static 초기화와 실행 시점",
+        "heading": "static 남용의 문제",
         "paragraphs": [
-          "static 필드는 클래스가 로딩될 때 준비된다. 필요한 경우 static 초기화 블록을 사용해 static 필드의 초기값을 복잡한 과정으로 설정할 수 있다. static 초기화 블록은 객체가 생성될 때마다 실행되는 것이 아니라 클래스가 처음 사용될 때 한 번 실행된다.",
-          "초급 단계에서는 static 초기화 블록을 자주 사용하지 않지만, static 멤버가 객체 생성보다 먼저 준비될 수 있다는 점을 이해하는 데 도움이 된다. 객체마다 실행되는 생성자와 클래스 차원에서 한 번 실행되는 static 초기화 블록은 역할이 다르다."
-        ],
-        "examples": [
-          {
-            "title": "static 초기화 블록",
-            "code": "class Config {\n    static int value;\n\n    static {\n        value = 100;\n        System.out.println(\"static 초기화 블록 실행\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(Config.value);\n        System.out.println(Config.value);\n    }\n}"
-          }
+          "static은 편리하지만 남용하면 코드 구조가 나빠질 수 있다. 객체를 만들지 않아도 사용할 수 있다는 이유로 모든 필드와 메서드를 static으로 만들면 객체 지향의 핵심인 객체별 상태 관리와 역할 분리가 약해진다.",
+          "특히 변경 가능한 static 필드는 여러 곳에서 동시에 값을 바꿀 수 있기 때문에 추적이 어려워질 수 있다. 공통으로 공유해야 하는 값인지, 객체마다 독립적으로 가져야 하는 값인지 먼저 판단한 뒤 static 사용 여부를 결정해야 한다."
         ]
       },
       {
-        "heading": "static을 남용하면 생기는 문제",
+        "heading": "static import의 개념",
         "paragraphs": [
-          "static은 객체 생성 없이 접근할 수 있어 편리하지만, 남용하면 코드 구조가 흐려질 수 있다. 특히 변경 가능한 static 필드는 프로그램 전체에서 공유되므로 어느 코드에서 값이 바뀌었는지 추적하기 어려울 수 있다. 여러 객체가 독립적인 상태를 가져야 하는데 static 필드로 만들면 모든 객체가 같은 값을 공유하는 문제가 생긴다.",
-          "객체 지향 설계에서는 데이터와 그 데이터를 다루는 기능을 객체 안에 묶어 관리하는 것이 중요하다. 모든 것을 static으로 처리하면 객체를 만들 필요가 줄어드는 것처럼 보이지만, 객체별 상태 관리와 확장성 측면에서는 오히려 불리할 수 있다. static은 공통 상수, 공통 유틸리티, 클래스 차원의 공유 값처럼 목적이 분명한 경우에 제한적으로 사용하는 것이 좋다."
-        ],
-        "examples": [
-          {
-            "title": "static 필드 남용 예시",
-            "code": "class User {\n    static String name;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        User u1 = new User();\n        User u2 = new User();\n\n        User.name = \"Kim\";\n        User.name = \"Lee\";\n\n        System.out.println(User.name);\n    }\n}"
-          }
+          "Java에는 static 멤버를 클래스 이름 없이 사용할 수 있게 하는 static import 문법도 있다. 예를 들어 `Math.PI`나 `Math.max()`를 자주 사용할 때 static import를 사용하면 `PI`, `max()`처럼 짧게 작성할 수 있다.",
+          "하지만 초보 단계에서는 static import를 많이 사용하는 것보다 클래스 이름을 함께 적어 static 멤버의 소속을 명확히 보여주는 것이 좋다. 코드가 짧아지는 장점은 있지만, 어디에서 온 값이나 메서드인지 파악하기 어려워질 수 있기 때문이다."
         ]
       },
       {
-        "heading": "static과 객체 지향 설계의 관계",
+        "heading": "static과 유틸리티 클래스",
         "paragraphs": [
-          "static은 객체 지향을 대체하는 문법이 아니라 클래스 차원의 멤버가 필요할 때 사용하는 보조적인 문법이다. 객체별 상태와 동작은 인스턴스 필드와 인스턴스 메서드로 표현하고, 객체와 무관하게 공통으로 사용할 값이나 기능은 static으로 표현한다. 이 구분이 명확해야 클래스 설계가 안정적이다.",
-          "예를 들어 학생의 이름과 점수는 학생 객체마다 다르므로 인스턴스 필드가 적절하다. 반면 전체 학생 수는 학생 객체 전체를 기준으로 하나만 관리하면 되므로 static 필드가 적절할 수 있다. 설계할 때는 값이 객체의 개별 상태인지, 클래스 전체의 공통 상태인지 먼저 판단해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "학생별 점수와 전체 학생 수",
-            "code": "class Student {\n    static int totalCount = 0;\n    String name;\n    int score;\n\n    Student(String name, int score) {\n        this.name = name;\n        this.score = score;\n        totalCount++;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student s1 = new Student(\"Kim\", 90);\n        Student s2 = new Student(\"Lee\", 80);\n\n        System.out.println(s1.name + \" \" + s1.score);\n        System.out.println(s2.name + \" \" + s2.score);\n        System.out.println(Student.totalCount);\n    }\n}"
-          }
+          "유틸리티 클래스는 객체 상태를 저장하기보다 여러 곳에서 공통으로 사용하는 기능을 모아 둔 클래스다. 예를 들어 계산 기능, 문자열 검사 기능, 날짜 변환 기능처럼 특정 객체의 상태에 의존하지 않는 기능은 static 메서드로 제공되는 경우가 많다.",
+          "대표적으로 Java의 `Math` 클래스는 여러 수학 기능을 static 메서드로 제공한다. `Math.max(10, 20)`처럼 객체를 만들지 않고 클래스 이름으로 메서드를 호출한다. 이런 구조는 특정 객체 상태가 필요 없는 공통 기능에 적합하다."
         ]
       },
       {
-        "heading": "static 메서드와 this의 관계",
+        "heading": "static과 this의 관계",
         "paragraphs": [
-          "this는 현재 객체 자신을 가리키는 참조다. 인스턴스 메서드나 생성자 안에서는 현재 객체가 존재하므로 this를 사용할 수 있다. 하지만 static 메서드는 객체 없이 호출될 수 있으므로 현재 객체라는 개념이 없다. 따라서 static 메서드 안에서는 this를 사용할 수 없다.",
-          "이 차이는 static 메서드가 객체의 상태와 직접 연결되지 않는다는 점을 보여준다. 객체의 필드나 현재 객체를 기준으로 동작해야 하는 기능이라면 static 메서드가 아니라 인스턴스 메서드로 작성해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "인스턴스 메서드에서 this 사용",
-            "code": "class Person {\n    String name;\n\n    Person(String name) {\n        this.name = name;\n    }\n\n    void printName() {\n        System.out.println(this.name);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Person person = new Person(\"Kim\");\n        person.printName();\n    }\n}"
-          }
+          "`this`는 현재 객체 자신을 가리키는 참조다. 인스턴스 메서드나 생성자에서는 현재 객체가 존재하므로 this를 사용할 수 있다. 하지만 static 메서드는 객체 없이 호출될 수 있으므로 현재 객체를 의미하는 this를 사용할 수 없다.",
+          "따라서 static 메서드 안에서 this를 사용하면 컴파일 오류가 발생한다. static 영역은 객체 자신이라는 개념과 직접 연결되지 않기 때문이다. 이 점은 static 메서드와 인스턴스 메서드의 차이를 이해하는 데 중요한 기준이 된다."
         ]
       },
       {
-        "heading": "static 사용 판단 기준",
+        "heading": "static을 판단하는 기준",
         "paragraphs": [
-          "어떤 멤버에 static을 붙일지 판단할 때는 세 가지 질문을 해볼 수 있다. 첫째, 이 값이나 기능이 특정 객체의 상태와 관련되는가. 관련된다면 인스턴스 멤버가 적절하다. 둘째, 객체를 만들지 않아도 사용할 수 있는 공통 기능인가. 그렇다면 static 메서드를 고려할 수 있다. 셋째, 모든 객체가 공유해야 하는 하나의 값인가. 그렇다면 static 필드를 고려할 수 있다.",
-          "실무적인 기준으로는 static final 상수와 상태 없는 유틸리티 메서드는 비교적 안전한 static 사용 사례다. 반대로 변경 가능한 static 필드는 영향 범위가 넓기 때문에 신중하게 사용해야 한다. static은 편의 기능이 아니라 소속과 생명주기를 다르게 만드는 문법이라는 점을 기억해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "static 사용이 적절한 간단한 계산 기능",
-            "code": "class DiscountCalculator {\n    static int calculateDiscountPrice(int price, int discountAmount) {\n        return price - discountAmount;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        int result = DiscountCalculator.calculateDiscountPrice(10000, 1500);\n        System.out.println(result);\n    }\n}"
-          }
+          "어떤 멤버를 static으로 만들지 판단할 때는 먼저 그 값이나 기능이 객체마다 달라야 하는지 생각해야 한다. 객체마다 달라야 하면 인스턴스 멤버가 적합하다. 모든 객체가 공유해야 하거나 객체 상태와 무관하게 사용할 수 있다면 static 멤버를 고려할 수 있다.",
+          "예를 들어 학생 이름은 학생마다 다르므로 인스턴스 필드가 맞다. 전체 학생 수는 모든 학생 객체가 공유해야 하므로 static 필드가 적합할 수 있다. 두 숫자의 최댓값을 구하는 기능은 특정 객체 상태에 의존하지 않으므로 static 메서드로 만들 수 있다."
         ]
       },
       {
         "heading": "static 단원 핵심 정리",
         "paragraphs": [
-          "static은 객체가 아니라 클래스에 소속되는 멤버를 만들 때 사용하는 키워드다. 인스턴스 필드와 인스턴스 메서드는 객체를 생성한 뒤 객체를 통해 사용하고, static 필드와 static 메서드는 클래스 이름을 통해 사용할 수 있다. 객체마다 달라야 하는 값은 인스턴스 필드로 두고, 클래스 전체에서 공유해야 하는 값은 static 필드로 둘 수 있다.",
-          "static 메서드는 객체 없이 호출될 수 있으므로 인스턴스 필드나 인스턴스 메서드에 직접 접근할 수 없다. main 메서드가 static인 이유도 JVM이 객체 생성 없이 프로그램 시작점을 호출해야 하기 때문이다. static final은 변경되지 않는 공통 상수를 표현할 때 사용한다. static은 편리하지만 공유 상태를 만들기 때문에 남용하지 말고, 클래스 전체 공통 값이나 상태 없는 유틸리티 기능처럼 목적이 분명한 경우에 사용해야 한다."
-        ],
-        "examples": [
-          {
-            "title": "static 핵심 종합 예제",
-            "code": "class Account {\n    static final String BANK_NAME = \"Java Bank\";\n    static int accountCount = 0;\n\n    String owner;\n    int balance;\n\n    Account(String owner, int balance) {\n        this.owner = owner;\n        this.balance = balance;\n        accountCount++;\n    }\n\n    void printInfo() {\n        System.out.println(BANK_NAME);\n        System.out.println(owner + \" \" + balance);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Account a1 = new Account(\"Kim\", 10000);\n        Account a2 = new Account(\"Lee\", 20000);\n\n        a1.printInfo();\n        a2.printInfo();\n        System.out.println(Account.accountCount);\n    }\n}"
-          }
+          "static은 클래스에 소속된 멤버를 만들기 위한 문법이다. static 필드는 객체마다 따로 존재하지 않고 클래스 수준에서 하나만 존재하며, static 메서드는 객체 생성 없이 클래스 이름으로 호출할 수 있다. main 메서드가 static인 이유도 JVM이 객체 생성 없이 프로그램의 시작점을 호출해야 하기 때문이다.",
+          "static은 공통 상수, 전체 개수, 유틸리티 기능처럼 객체 상태와 무관하거나 공유되어야 하는 값과 기능에 적합하다. 반대로 객체마다 달라야 하는 값은 인스턴스 필드로 두어야 한다. static과 인스턴스의 차이를 정확히 이해하면 Java 클래스 설계에서 데이터의 소속과 역할을 더 명확히 구분할 수 있다."
         ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "인스턴스 필드와 static 필드 비교",
+        "code": "class Student {\n    String name;\n    static int count = 0;\n\n    Student(String name) {\n        this.name = name;\n        count++;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student s1 = new Student(\"Kim\");\n        Student s2 = new Student(\"Lee\");\n\n        System.out.println(s1.name);\n        System.out.println(s2.name);\n        System.out.println(Student.count);\n    }\n}"
+      },
+      {
+        "title": "static 메서드 사용",
+        "code": "class Calculator {\n    static int add(int a, int b) {\n        return a + b;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        int result = Calculator.add(10, 20);\n        System.out.println(result);\n    }\n}"
+      },
+      {
+        "title": "static final 상수",
+        "code": "class MathConfig {\n    static final double PI = 3.14159;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println(MathConfig.PI);\n    }\n}"
+      },
+      {
+        "title": "static 메서드에서 인스턴스 필드 직접 접근 오류 예시",
+        "code": "class Counter {\n    int value = 10;\n\n    static void printValue() {\n        // System.out.println(value); // 오류: static 메서드에서 인스턴스 필드 직접 접근 불가\n    }\n}"
+      },
+      {
+        "title": "객체를 통한 인스턴스 멤버 접근",
+        "code": "class Counter {\n    int value = 10;\n\n    void printValue() {\n        System.out.println(value);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Counter counter = new Counter();\n        counter.printValue();\n    }\n}"
       }
     ]
   },
   "questions": [
     {
       "id": "static-members-q1",
-      "question": "static 키워드의 기본 의미로 가장 적절한 것은 무엇인가?",
+      "question": "static에 대한 설명으로 가장 적절한 것은 무엇인가?",
       "choices": {
-        "A": "조건문을 만든다.",
-        "B": "객체가 아니라 클래스에 소속되는 멤버를 만든다.",
-        "C": "반복문을 종료한다.",
-        "D": "파일 이름을 변경한다."
+        "A": "클래스에 소속된 멤버를 만들 때 사용한다.",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "B",
-      "explanation": "static은 클래스 차원의 필드나 메서드를 만들 때 사용하는 키워드다.",
-      "analysis": "static의 핵심은 소속이다. 일반 멤버는 객체에 소속되고 static 멤버는 클래스에 소속된다."
+      "answer": "A",
+      "explanation": "정답은 A번이다. 클래스에 소속된 멤버를 만들 때 사용한다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q2",
-      "question": "인스턴스 필드에 대한 설명으로 적절한 것은 무엇인가?",
+      "question": "인스턴스 필드에 대한 설명으로 가장 적절한 것은 무엇인가?",
       "choices": {
-        "A": "항상 클래스 전체에서 하나만 존재한다.",
-        "B": "객체마다 별도의 값을 가질 수 있다.",
-        "C": "객체 생성 없이만 사용할 수 있다.",
-        "D": "반드시 final과 함께 사용해야 한다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "객체마다 따로 존재하는 필드이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "B",
-      "explanation": "인스턴스 필드는 객체가 생성될 때 객체별로 준비된다.",
-      "analysis": "학생 이름이나 계좌 잔액처럼 객체마다 달라야 하는 값은 인스턴스 필드로 두는 것이 적절하다."
+      "explanation": "정답은 B번이다. 객체마다 따로 존재하는 필드이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q3",
-      "question": "static 필드에 대한 설명으로 적절한 것은 무엇인가?",
+      "question": "static 필드의 특징으로 옳은 것은 무엇인가?",
       "choices": {
-        "A": "객체마다 무조건 다른 값을 가진다.",
-        "B": "클래스 차원에서 하나만 관리되는 공유 필드다.",
-        "C": "메서드 안에서만 선언할 수 있다.",
-        "D": "문자열에만 사용할 수 있다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "객체 여러 개가 같은 값을 공유할 수 있다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "B",
-      "explanation": "static 필드는 클래스에 소속되며 여러 객체가 공유한다.",
-      "analysis": "공통 카운트나 공통 설정값처럼 클래스 전체 기준으로 하나만 필요한 값에 static 필드를 사용할 수 있다."
+      "answer": "C",
+      "explanation": "정답은 C번이다. 객체 여러 개가 같은 값을 공유할 수 있다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q4",
-      "question": "static 메서드를 호출하는 일반적인 방식으로 적절한 것은 무엇인가?",
+      "question": "static 메서드의 일반적인 호출 방식으로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "클래스이름.메서드이름() 형태로 호출한다.",
-        "B": "반드시 객체이름.메서드이름()만 사용한다.",
-        "C": "항상 new static으로 호출한다.",
-        "D": "파일명.확장자()로 호출한다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "클래스 이름으로 호출한다."
       },
-      "answer": "A",
-      "explanation": "static 메서드는 클래스에 소속되므로 클래스 이름으로 호출하는 것이 원칙이다.",
-      "analysis": "객체 참조로 static 메서드를 호출할 수도 있는 경우가 있지만 오해를 줄 수 있으므로 클래스 이름으로 호출하는 것이 명확하다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. 클래스 이름으로 호출한다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q5",
-      "question": "main 메서드가 static인 이유로 가장 적절한 것은 무엇인가?",
+      "question": "main 메서드에 static이 붙는 이유로 가장 적절한 것은 무엇인가?",
       "choices": {
         "A": "JVM이 객체 생성 없이 프로그램 시작점을 호출해야 하기 때문이다.",
-        "B": "main 메서드는 반복문이기 때문이다.",
-        "C": "main 메서드는 문자열만 출력하기 때문이다.",
-        "D": "main 메서드는 파일 저장 기능이기 때문이다."
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "A",
-      "explanation": "프로그램 시작 시점에는 객체가 아직 만들어지지 않았으므로 JVM이 바로 호출할 수 있도록 main은 static이다.",
-      "analysis": "main의 static을 이해하면 static 메서드에서 인스턴스 멤버를 직접 사용할 수 없는 이유도 함께 이해할 수 있다."
+      "explanation": "정답은 A번이다. JVM이 객체 생성 없이 프로그램 시작점을 호출해야 하기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q6",
-      "question": "static 메서드 안에서 인스턴스 필드를 바로 사용할 수 없는 이유는 무엇인가?",
+      "question": "static 메서드 안에서 인스턴스 필드를 직접 사용할 수 없는 이유는 무엇인가?",
       "choices": {
-        "A": "static 메서드는 항상 문자열만 처리하기 때문이다.",
-        "B": "인스턴스 필드는 final이기 때문이다.",
-        "C": "인스턴스 필드는 컴파일되지 않기 때문이다.",
-        "D": "어떤 객체의 필드인지 알 수 없기 때문이다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "인스턴스 필드는 객체가 생성되어야 존재하기 때문이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "D",
-      "explanation": "static 메서드는 객체 없이 호출될 수 있으므로 특정 객체에 속한 인스턴스 필드를 직접 사용할 수 없다.",
-      "analysis": "인스턴스 필드를 사용하려면 객체를 생성하거나 객체를 전달받아 그 객체를 통해 접근해야 한다."
+      "answer": "B",
+      "explanation": "정답은 B번이다. 인스턴스 필드는 객체가 생성되어야 존재하기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q7",
-      "question": "인스턴스 메서드 안에서 static 필드에 접근할 수 있는 이유는 무엇인가?",
+      "question": "모든 객체가 공유해야 하는 전체 학생 수를 저장하기 적절한 것은 무엇인가?",
       "choices": {
-        "A": "인스턴스 메서드는 static보다 먼저 실행되기 때문이다.",
-        "B": "static 필드는 지역변수이기 때문이다.",
-        "C": "객체가 생성된 시점에는 클래스 정보와 static 멤버가 이미 준비되어 있기 때문이다.",
-        "D": "인스턴스 메서드는 항상 public이기 때문이다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "static 필드",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "C",
-      "explanation": "인스턴스 메서드는 객체가 있어야 호출되고, 그 전에 클래스의 static 멤버는 준비되어 있다.",
-      "analysis": "가능하더라도 static 멤버는 클래스 이름으로 접근하는 방식이 의미를 더 분명하게 한다."
+      "explanation": "정답은 C번이다. static 필드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q8",
-      "question": "static final의 의미로 가장 적절한 것은 무엇인가?",
+      "question": "학생 이름처럼 객체마다 달라야 하는 값에 적합한 것은 무엇인가?",
       "choices": {
-        "A": "클래스 전체에서 공유되고 변경할 수 없는 상수다.",
-        "B": "객체마다 변경 가능한 값이다.",
-        "C": "반복문을 한 번만 실행한다.",
-        "D": "조건식을 반드시 true로 만든다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "인스턴스 필드"
       },
-      "answer": "A",
-      "explanation": "static final은 공통으로 사용하는 변경 불가능한 값을 표현할 때 사용한다.",
-      "analysis": "상수 이름은 보통 대문자와 밑줄을 사용하여 MAX_COUNT처럼 작성한다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인스턴스 필드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q9",
-      "question": "다음 중 static final 상수에 적절한 이름 관례는 무엇인가?",
+      "question": "변하지 않는 클래스 수준의 공통 값을 표현할 때 적절한 조합은 무엇인가?",
       "choices": {
-        "A": "maxLoginCount",
-        "B": "maxlogincount",
-        "C": "MAX_LOGIN_COUNT",
-        "D": "MaxLoginCount"
+        "A": "static final",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "C",
-      "explanation": "상수는 보통 모두 대문자로 쓰고 단어 사이를 밑줄로 구분한다.",
-      "analysis": "이름 관례는 문법 강제는 아니지만 코드의 의미를 명확하게 만드는 중요한 약속이다."
+      "answer": "A",
+      "explanation": "정답은 A번이다. static final static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q10",
-      "question": "객체마다 달라야 하는 값을 static 필드로 만들면 어떤 문제가 생길 수 있는가?",
+      "question": "static final로 선언한 상수 이름 관례로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "컴파일러가 Java 파일을 삭제한다.",
-        "B": "모든 객체가 같은 값을 공유해 의도와 다른 결과가 생길 수 있다.",
-        "C": "반복문이 실행되지 않는다.",
-        "D": "문자열을 출력할 수 없게 된다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "대문자와 밑줄을 사용한다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "B",
-      "explanation": "static 필드는 클래스 차원의 공유 값이므로 객체별 개별 상태에 적합하지 않다.",
-      "analysis": "학생 이름이나 계좌 잔액처럼 객체마다 달라야 하는 값은 인스턴스 필드로 두어야 한다."
+      "explanation": "정답은 B번이다. 대문자와 밑줄을 사용한다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q11",
-      "question": "유틸리티 클래스의 static 메서드에 적합한 기능은 무엇인가?",
+      "question": "static 메서드 안에서 사용할 수 없는 키워드로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "객체별 잔액을 직접 저장하는 기능",
-        "B": "객체별 이름을 보관하는 필드",
-        "C": "입력값만으로 결과를 계산하는 공통 기능",
-        "D": "생성자 내부에서만 쓰는 지역변수"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "this",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "C",
-      "explanation": "유틸리티 메서드는 특정 객체 상태와 무관한 공통 기능에 적합하다.",
-      "analysis": "문자열 검사나 단순 계산처럼 상태를 가지지 않는 기능은 static 메서드로 작성할 수 있다."
+      "explanation": "정답은 C번이다. this static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q12",
-      "question": "static import에 대한 설명으로 적절한 것은 무엇인가?",
+      "question": "this에 대한 설명으로 가장 적절한 것은 무엇인가?",
       "choices": {
-        "A": "객체를 자동으로 생성하는 문법이다.",
-        "B": "static 멤버를 클래스 이름 없이 사용할 수 있게 하는 문법이다.",
-        "C": "필드를 private으로 바꾸는 문법이다.",
-        "D": "반복문을 중단하는 문법이다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "현재 객체 자신을 가리킨다."
       },
-      "answer": "B",
-      "explanation": "static import를 사용하면 Math.max를 max처럼 호출할 수 있다.",
-      "analysis": "초급 단계에서는 어떤 클래스의 멤버인지 명확하게 보이도록 클래스 이름을 함께 쓰는 방식이 더 적절하다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. 현재 객체 자신을 가리킨다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q13",
-      "question": "static 초기화 블록에 대한 설명으로 적절한 것은 무엇인가?",
+      "question": "static import의 목적에 대한 설명으로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "클래스가 처음 사용될 때 static 값을 초기화하는 데 사용할 수 있다.",
-        "B": "객체가 생성될 때마다 무조건 실행되는 생성자다.",
-        "C": "메서드의 반환형을 바꾸는 문법이다.",
-        "D": "문자열을 숫자로 자동 변환하는 문법이다."
+        "A": "static 멤버를 클래스 이름 없이 사용할 수 있게 한다.",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "A",
-      "explanation": "static 초기화 블록은 static 필드를 초기화하는 코드 블록이다.",
-      "analysis": "생성자가 객체 생성 시 실행되는 것과 달리 static 초기화 블록은 클래스 차원에서 실행된다."
+      "explanation": "정답은 A번이다. static 멤버를 클래스 이름 없이 사용할 수 있게 한다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q14",
-      "question": "static을 남용할 때의 문제로 적절한 것은 무엇인가?",
+      "question": "유틸리티 클래스에 static 메서드가 자주 사용되는 이유는 무엇인가?",
       "choices": {
-        "A": "공유 상태가 많아져 값 변경 원인을 추적하기 어려울 수 있다.",
-        "B": "클래스 이름을 사용할 수 없게 된다.",
-        "C": "JVM이 실행되지 않는다.",
-        "D": "모든 코드가 주석으로 바뀐다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "객체 상태 없이 공통 기능을 제공하기 적합하기 때문이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "A",
-      "explanation": "변경 가능한 static 필드는 프로그램 여러 곳에서 공유되므로 관리가 어려워질 수 있다.",
-      "analysis": "static은 목적이 분명한 경우에 제한적으로 사용하는 것이 좋다."
+      "answer": "B",
+      "explanation": "정답은 B번이다. 객체 상태 없이 공통 기능을 제공하기 적합하기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q15",
-      "question": "this 키워드를 static 메서드 안에서 사용할 수 없는 이유는 무엇인가?",
+      "question": "Math.max(10, 20)과 같은 호출 방식이 가능한 이유는 무엇인가?",
       "choices": {
-        "A": "this는 반복문에서만 쓰기 때문이다.",
-        "B": "this는 문자열 전용 키워드이기 때문이다.",
-        "C": "this는 public 클래스에서 금지되기 때문이다.",
-        "D": "static 메서드에는 현재 객체라는 개념이 없기 때문이다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "max 메서드가 static 메서드이기 때문이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "D",
-      "explanation": "this는 현재 객체 자신을 가리키므로 객체 없이 호출되는 static 메서드에서는 사용할 수 없다.",
-      "analysis": "현재 객체의 상태를 다루어야 한다면 인스턴스 메서드로 작성하는 것이 적절하다."
+      "answer": "C",
+      "explanation": "정답은 C번이다. max 메서드가 static 메서드이기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q16",
-      "question": "다음 중 static 필드 사용에 비교적 적절한 예는 무엇인가?",
+      "question": "static 필드를 객체 참조 변수로 접근하는 방식이 권장되지 않는 이유는 무엇인가?",
       "choices": {
-        "A": "학생 개별 이름",
-        "B": "계좌별 잔액",
-        "C": "상품별 색상",
-        "D": "생성된 객체의 전체 개수를 세는 count"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "객체 소속 값처럼 보여 의미가 혼동될 수 있기 때문이다."
       },
       "answer": "D",
-      "explanation": "전체 객체 수는 클래스 전체 기준으로 하나만 관리하면 되므로 static 필드가 적절할 수 있다.",
-      "analysis": "객체별 속성은 인스턴스 필드로 두고 전체 공통 정보는 static으로 두는 판단이 필요하다."
+      "explanation": "정답은 D번이다. 객체 소속 값처럼 보여 의미가 혼동될 수 있기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q17",
-      "question": "다음 중 인스턴스 필드에 적절한 예는 무엇인가?",
+      "question": "static 필드가 준비되는 시점에 대한 설명으로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "학생 객체별 이름",
-        "B": "전체 학생 수",
-        "C": "프로그램 이름 상수",
-        "D": "공통 세율 상수"
+        "A": "클래스가 로딩될 때 클래스 수준에서 준비된다.",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "A",
-      "explanation": "학생 이름은 학생 객체마다 달라야 하므로 인스턴스 필드가 적절하다.",
-      "analysis": "값의 소유자가 개별 객체인지 클래스 전체인지 구분하는 것이 static 판단의 핵심이다."
+      "explanation": "정답은 A번이다. 클래스가 로딩될 때 클래스 수준에서 준비된다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q18",
-      "question": "static 메서드의 특징으로 적절한 것은 무엇인가?",
+      "question": "생성된 객체 수를 세는 count 필드가 static에 적합한 이유는 무엇인가?",
       "choices": {
-        "A": "반드시 생성자 안에서만 호출할 수 있다.",
-        "B": "객체를 생성하지 않고 호출할 수 있다.",
-        "C": "항상 인스턴스 필드를 직접 사용해야 한다.",
-        "D": "반드시 private이어야 한다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "객체마다 따로 존재하면 전체 개수를 누적하기 어렵기 때문이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "B",
-      "explanation": "static 메서드는 클래스에 소속되므로 객체 없이 클래스 이름으로 호출할 수 있다.",
-      "analysis": "객체 상태와 무관한 공통 기능을 만들 때 static 메서드가 적합하다."
+      "explanation": "정답은 B번이다. 객체마다 따로 존재하면 전체 개수를 누적하기 어렵기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q19",
-      "question": "일반 static 필드와 static final 필드의 차이로 적절한 것은 무엇인가?",
+      "question": "객체마다 다른 잔액을 저장해야 하는 balance 필드에 적합한 선언은 무엇인가?",
       "choices": {
-        "A": "둘 다 반드시 객체마다 따로 존재한다.",
-        "B": "static final은 메서드에만 사용할 수 있다.",
-        "C": "일반 static 필드는 변경 가능하고 static final 필드는 변경할 수 없다.",
-        "D": "일반 static 필드는 컴파일되지 않는다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "인스턴스 필드",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "C",
-      "explanation": "final은 한 번 정한 값을 다시 대입할 수 없게 한다.",
-      "analysis": "변하지 않는 공통 기준값은 static final 상수로 두는 것이 일반적이다."
+      "explanation": "정답은 C번이다. 인스턴스 필드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q20",
-      "question": "static 멤버에 객체 참조로 접근하는 방식이 권장되지 않는 이유는 무엇인가?",
+      "question": "static을 남용했을 때의 문제로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "객체별 멤버처럼 오해할 수 있기 때문이다.",
-        "B": "항상 실행 오류가 발생하기 때문이다.",
-        "C": "문자열만 출력되기 때문이다.",
-        "D": "컴파일러가 파일명을 바꾸기 때문이다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "객체별 상태 관리와 역할 분리가 약해질 수 있다."
       },
-      "answer": "A",
-      "explanation": "static 멤버는 클래스 소속이므로 클래스 이름으로 접근하는 것이 의미를 명확하게 한다.",
-      "analysis": "문법적으로 허용되는 경우가 있어도 코드의 의도가 흐려지면 좋은 작성 방식이 아니다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. 객체별 상태 관리와 역할 분리가 약해질 수 있다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q21",
-      "question": "다음 코드에서 count를 static으로 두는 이유로 적절한 것은 무엇인가?",
+      "question": "static 메서드가 적합하지 않은 경우는 무엇인가?",
       "choices": {
-        "A": "객체마다 count 값을 다르게 만들기 위해서",
-        "B": "count를 문자열로 바꾸기 위해서",
-        "C": "생성자를 제거하기 위해서",
-        "D": "모든 객체가 공유하는 전체 개수를 관리하기 위해서"
+        "A": "객체의 인스턴스 필드를 읽고 변경해야 하는 경우",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "D",
-      "explanation": "객체 생성 횟수는 클래스 전체에서 하나의 값으로 관리해야 하므로 static 필드가 적절하다.",
-      "analysis": "공유해야 하는 값인지 개별 객체별 값인지 판단하는 것이 중요하다."
+      "answer": "A",
+      "explanation": "정답은 A번이다. 객체의 인스턴스 필드를 읽고 변경해야 하는 경우 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q22",
-      "question": "static 메서드가 인스턴스 메서드와 가장 크게 다른 점은 무엇인가?",
+      "question": "static 필드와 인스턴스 필드의 가장 큰 차이는 무엇인가?",
       "choices": {
-        "A": "반드시 값을 반환하지 않는다는 점",
-        "B": "객체 생성 없이 호출될 수 있다는 점",
-        "C": "조건식만 작성할 수 있다는 점",
-        "D": "클래스 밖에 작성해야 한다는 점"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "클래스 공유 값인지 객체별 값인지의 차이이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "B",
-      "explanation": "static 메서드는 클래스에 소속되며 클래스 이름으로 호출할 수 있다.",
-      "analysis": "인스턴스 메서드는 객체의 상태를 사용하거나 변경하는 기능에 적합하다."
+      "explanation": "정답은 B번이다. 클래스 공유 값인지 객체별 값인지의 차이이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q23",
-      "question": "main 메서드 안에서 인스턴스 메서드를 사용하려면 일반적으로 무엇을 해야 하는가?",
+      "question": "클래스 이름으로 접근하는 표현으로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "main 앞의 static을 삭제하지 않고 바로 필드명을 쓴다.",
-        "B": "메서드 이름을 대문자로 바꾼다.",
-        "C": "객체를 생성한 뒤 그 객체를 통해 호출한다.",
-        "D": "반드시 static import를 사용한다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "Counter.count",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "C",
-      "explanation": "main은 static 메서드이므로 인스턴스 멤버를 직접 사용할 수 없다.",
-      "analysis": "객체를 생성한 뒤 참조 변수를 통해 인스턴스 메서드를 호출해야 한다."
+      "explanation": "정답은 C번이다. Counter.count static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q24",
-      "question": "Math.max(10, 20) 호출에서 max는 어떤 종류의 메서드인가?",
+      "question": "객체를 생성해야 사용할 수 있는 메서드는 무엇인가?",
       "choices": {
-        "A": "생성자",
-        "B": "인스턴스 필드",
-        "C": "지역변수",
-        "D": "static 메서드"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "인스턴스 메서드"
       },
       "answer": "D",
-      "explanation": "Math.max는 Math 클래스의 static 메서드이므로 객체 생성 없이 호출한다.",
-      "analysis": "Java 표준 라이브러리에도 static 유틸리티 메서드가 많이 제공된다."
+      "explanation": "정답은 D번이다. 인스턴스 메서드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q25",
-      "question": "static 필드가 준비되는 시점에 대한 설명으로 적절한 것은 무엇인가?",
+      "question": "static 메서드가 인스턴스 멤버를 사용하려면 일반적으로 무엇이 필요한가?",
       "choices": {
-        "A": "객체가 생성될 때마다 새로 독립 생성된다.",
-        "B": "반복문이 끝날 때만 생성된다.",
-        "C": "메서드가 반환될 때 삭제된다.",
-        "D": "클래스가 로딩될 때 클래스 차원에서 준비된다."
+        "A": "객체 참조",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "D",
-      "explanation": "static 필드는 클래스 로딩 시점에 클래스 소속으로 준비된다.",
-      "analysis": "이 때문에 여러 객체가 같은 static 필드를 공유하게 된다."
+      "answer": "A",
+      "explanation": "정답은 A번이다. 객체 참조 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q26",
-      "question": "인스턴스 필드가 준비되는 시점에 대한 설명으로 적절한 것은 무엇인가?",
+      "question": "상수 PI를 클래스 수준에서 공유하려면 어떤 선언이 적절한가?",
       "choices": {
-        "A": "클래스 파일을 저장할 때 생성된다.",
-        "B": "static import를 사용할 때만 생성된다.",
-        "C": "객체가 생성될 때 객체별로 준비된다.",
-        "D": "컴파일 전에 이미 출력된다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "static final double PI",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "C",
-      "explanation": "인스턴스 필드는 new로 객체가 생성될 때 객체마다 준비된다.",
-      "analysis": "객체별 상태를 저장해야 하는 값은 인스턴스 필드를 사용해야 한다."
+      "answer": "B",
+      "explanation": "정답은 B번이다. static final double PI static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q27",
-      "question": "static을 붙이면 안 되는 경우에 가까운 것은 무엇인가?",
+      "question": "static 초기화 블록에 대한 설명으로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "공통 상수",
-        "B": "상태 없는 계산 기능",
-        "C": "객체마다 독립적으로 가져야 하는 상태",
-        "D": "전체 객체 수"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "클래스가 처음 사용될 때 한 번 실행될 수 있다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "C",
-      "explanation": "객체마다 달라야 하는 상태를 static으로 두면 모든 객체가 값을 공유하게 된다.",
-      "analysis": "static 사용 여부는 값이 개별 객체의 상태인지 공통 정보인지에 따라 판단한다."
+      "explanation": "정답은 C번이다. 클래스가 처음 사용될 때 한 번 실행될 수 있다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q28",
-      "question": "다음 중 static final로 선언하기에 적절한 것은 무엇인가?",
+      "question": "main 메서드의 표준 형태에 포함되는 키워드는 무엇인가?",
       "choices": {
-        "A": "사용자별 이름",
-        "B": "변하지 않는 기본 세율",
-        "C": "계좌별 잔액",
-        "D": "학생별 점수"
-      },
-      "answer": "B",
-      "explanation": "변하지 않는 공통 기준값은 static final 상수로 선언하기 적절하다.",
-      "analysis": "사용자별 이름이나 계좌별 잔액처럼 객체마다 다른 값은 인스턴스 필드로 두어야 한다."
-    },
-    {
-      "id": "static-members-q29",
-      "question": "static 메서드 안에서 인스턴스 필드를 사용하려면 어떻게 해야 하는가?",
-      "choices": {
-        "A": "필드 이름만 바로 작성한다.",
-        "B": "객체를 생성하거나 전달받아 그 객체를 통해 접근한다.",
-        "C": "반드시 주석으로 처리한다.",
-        "D": "세미콜론을 제거한다."
-      },
-      "answer": "B",
-      "explanation": "인스턴스 필드는 특정 객체에 속하므로 객체를 통해 접근해야 한다.",
-      "analysis": "static 메서드는 객체 없이 호출될 수 있으므로 어떤 객체의 필드인지 명확히 해야 한다."
-    },
-    {
-      "id": "static-members-q30",
-      "question": "static 필드를 변경하면 어떤 결과가 나타날 수 있는가?",
-      "choices": {
-        "A": "해당 객체 하나에서만 값이 바뀐다.",
-        "B": "컴파일러가 코드를 삭제한다.",
-        "C": "main 메서드가 사라진다.",
-        "D": "같은 static 필드를 읽는 모든 코드에 변경된 값이 보인다."
-      },
-      "answer": "D",
-      "explanation": "static 필드는 공유 값이므로 한 곳에서 변경하면 다른 곳에서도 변경된 값을 읽게 된다.",
-      "analysis": "이 특성 때문에 변경 가능한 static 필드는 신중히 사용해야 한다."
-    },
-    {
-      "id": "static-members-q31",
-      "question": "다음 중 클래스 이름으로 호출하는 방식이 자연스러운 것은 무엇인가?",
-      "choices": {
-        "A": "student.name",
-        "B": "account.balance",
-        "C": "person.age",
-        "D": "MathTool.add(1, 2)"
-      },
-      "answer": "D",
-      "explanation": "MathTool.add와 같은 static 유틸리티 메서드는 클래스 이름으로 호출하는 방식이 적절하다.",
-      "analysis": "객체별 필드 접근과 클래스 차원 메서드 호출을 구분해야 한다."
-    },
-    {
-      "id": "static-members-q32",
-      "question": "static 메서드가 객체 상태와 무관한 기능에 적합한 이유는 무엇인가?",
-      "choices": {
-        "A": "객체별 필드를 반드시 변경해야 하기 때문이다.",
-        "B": "생성자를 자동으로 호출하기 때문이다.",
-        "C": "객체 생성 없이 입력값만으로 결과를 만들 수 있기 때문이다.",
-        "D": "모든 변수를 private으로 만들기 때문이다."
-      },
-      "answer": "C",
-      "explanation": "static 메서드는 특정 객체의 상태에 의존하지 않는 기능에 적합하다.",
-      "analysis": "입력값만으로 계산되는 기능은 유틸리티 메서드로 분리할 수 있다."
-    },
-    {
-      "id": "static-members-q33",
-      "question": "static과 관련한 설명 중 옳은 것은 무엇인가?",
-      "choices": {
-        "A": "static 멤버는 항상 객체마다 따로 존재한다.",
-        "B": "static은 조건문 전용 키워드다.",
-        "C": "static 멤버는 클래스에 소속된다.",
-        "D": "static은 문자열을 숫자로 변환한다."
-      },
-      "answer": "C",
-      "explanation": "static은 클래스 차원의 멤버를 만들 때 사용한다.",
-      "analysis": "static을 이해하려면 클래스 소속과 객체 소속을 구분해야 한다."
-    },
-    {
-      "id": "static-members-q34",
-      "question": "다음 중 main 메서드의 표준 선언에 포함되는 키워드는 무엇인가?",
-      "choices": {
-        "A": "extends",
-        "B": "implements",
-        "C": "package",
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
         "D": "static"
       },
       "answer": "D",
-      "explanation": "main 메서드는 public static void main(String[] args) 형태로 작성된다.",
-      "analysis": "main이 static인 이유는 JVM이 객체 생성 없이 시작점을 호출해야 하기 때문이다."
+      "explanation": "정답은 D번이다. static static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
+    },
+    {
+      "id": "static-members-q29",
+      "question": "공통 설정값을 여러 객체가 함께 사용해야 할 때 고려할 수 있는 것은 무엇인가?",
+      "choices": {
+        "A": "static 필드",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. static 필드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
+    },
+    {
+      "id": "static-members-q30",
+      "question": "객체별 데이터에 static을 붙였을 때 발생할 수 있는 문제는 무엇인가?",
+      "choices": {
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "모든 객체가 같은 값을 공유하게 된다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 모든 객체가 같은 값을 공유하게 된다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
+    },
+    {
+      "id": "static-members-q31",
+      "question": "static 멤버의 소속을 가장 명확하게 보여주는 접근 방식은 무엇인가?",
+      "choices": {
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "클래스 이름으로 접근",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
+      },
+      "answer": "C",
+      "explanation": "정답은 C번이다. 클래스 이름으로 접근 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
+    },
+    {
+      "id": "static-members-q32",
+      "question": "인스턴스 멤버의 소속으로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "개별 객체"
+      },
+      "answer": "D",
+      "explanation": "정답은 D번이다. 개별 객체 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
+    },
+    {
+      "id": "static-members-q33",
+      "question": "static 멤버의 소속으로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "클래스",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
+      },
+      "answer": "A",
+      "explanation": "정답은 A번이다. 클래스 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
+    },
+    {
+      "id": "static-members-q34",
+      "question": "static 메서드의 장점으로 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "객체 생성 없이 공통 기능을 호출할 수 있다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
+      },
+      "answer": "B",
+      "explanation": "정답은 B번이다. 객체 생성 없이 공통 기능을 호출할 수 있다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q35",
-      "question": "static 초기화 블록과 생성자의 차이로 적절한 것은 무엇인가?",
+      "question": "static 필드가 클래스 수준에서 하나만 존재한다는 말의 의미는 무엇인가?",
       "choices": {
-        "A": "둘 다 객체마다 같은 횟수로만 실행된다.",
-        "B": "static 초기화 블록은 클래스 차원에서 실행되고 생성자는 객체 생성 시 실행된다.",
-        "C": "생성자는 static 필드만 초기화한다.",
-        "D": "static 초기화 블록은 조건문 안에서만 작성한다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "여러 객체가 같은 저장 공간의 값을 공유한다는 뜻이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "B",
-      "explanation": "static 초기화 블록은 static 멤버 초기화에 사용되고 생성자는 객체 초기화에 사용된다.",
-      "analysis": "두 문법은 실행 시점과 목적이 다르므로 구분해야 한다."
+      "answer": "C",
+      "explanation": "정답은 C번이다. 여러 객체가 같은 저장 공간의 값을 공유한다는 뜻이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q36",
-      "question": "static final 필드에 값을 다시 대입하려고 하면 어떻게 되는가?",
+      "question": "학생 객체의 name을 static으로 선언하면 발생할 수 있는 문제는 무엇인가?",
       "choices": {
-        "A": "자동으로 값이 두 개 저장된다.",
-        "B": "무조건 실행 결과가 0이 된다.",
-        "C": "필드가 인스턴스 필드로 변한다.",
-        "D": "컴파일 오류가 발생할 수 있다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "모든 학생 객체가 같은 이름 값을 공유할 수 있다."
       },
       "answer": "D",
-      "explanation": "final로 선언된 필드는 한 번 초기화된 뒤 다시 값을 대입할 수 없다.",
-      "analysis": "상수는 변경되지 않는 값을 표현하기 위한 것이므로 재대입을 허용하지 않는다."
+      "explanation": "정답은 D번이다. 모든 학생 객체가 같은 이름 값을 공유할 수 있다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q37",
-      "question": "다음 중 static 남용에 해당할 가능성이 큰 것은 무엇인가?",
+      "question": "static과 final을 함께 사용할 때 final의 의미는 무엇인가?",
       "choices": {
-        "A": "최대 로그인 횟수를 static final로 선언하는 것",
-        "B": "객체 수를 static count로 세는 것",
-        "C": "상태 없는 계산 메서드를 static으로 두는 것",
-        "D": "모든 사용자 이름을 하나의 static 필드로 관리하는 것"
+        "A": "값을 한 번 정하면 변경할 수 없다는 뜻이다.",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "D",
-      "explanation": "사용자 이름은 사용자 객체마다 달라야 하므로 static 필드 하나로 관리하면 문제가 생긴다.",
-      "analysis": "객체별 상태를 공유 필드로 만들면 여러 객체가 서로의 값을 덮어쓰는 문제가 생길 수 있다."
+      "answer": "A",
+      "explanation": "정답은 A번이다. 값을 한 번 정하면 변경할 수 없다는 뜻이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q38",
-      "question": "객체 지향 설계에서 static의 적절한 역할은 무엇인가?",
+      "question": "static 메서드가 객체 상태에 의존하지 않는다는 말의 의미는 무엇인가?",
       "choices": {
-        "A": "공통 값이나 상태 없는 공통 기능을 표현하는 보조 수단",
-        "B": "모든 객체 설계를 대체하는 방식",
-        "C": "상속을 금지하는 방식",
-        "D": "변수 선언을 생략하는 방식"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "특정 객체의 필드 값 없이도 동작할 수 있다는 뜻이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "A",
-      "explanation": "static은 객체 지향을 대체하는 것이 아니라 클래스 차원의 멤버가 필요할 때 사용한다.",
-      "analysis": "객체별 상태와 동작은 인스턴스 멤버로 표현하는 것이 기본이다."
+      "answer": "B",
+      "explanation": "정답은 B번이다. 특정 객체의 필드 값 없이도 동작할 수 있다는 뜻이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q39",
-      "question": "다음 중 this를 사용할 수 있는 위치로 적절한 것은 무엇인가?",
+      "question": "static 필드를 여러 곳에서 변경할 때 주의해야 하는 이유는 무엇인가?",
       "choices": {
-        "A": "static 메서드 내부에서 현재 객체 없이",
-        "B": "클래스 밖 최상위 위치",
-        "C": "인스턴스 메서드나 생성자 내부",
-        "D": "import 문 안"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "공유 상태라 변경 추적이 어려워질 수 있기 때문이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "C",
-      "explanation": "this는 현재 객체를 가리키므로 객체가 존재하는 인스턴스 문맥에서 사용할 수 있다.",
-      "analysis": "static 메서드에는 현재 객체가 없으므로 this를 사용할 수 없다."
+      "explanation": "정답은 C번이다. 공유 상태라 변경 추적이 어려워질 수 있기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q40",
-      "question": "static 필드를 객체별 상태처럼 사용하면 안 되는 이유는 무엇인가?",
+      "question": "객체를 만들지 않고 호출할 수 있는 메서드는 무엇인가?",
       "choices": {
-        "A": "static 필드는 항상 null만 저장하기 때문이다.",
-        "B": "static 필드는 출력할 수 없기 때문이다.",
-        "C": "static 필드는 모든 객체가 공유하기 때문이다.",
-        "D": "static 필드는 클래스 안에 작성할 수 없기 때문이다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "static 메서드"
       },
-      "answer": "C",
-      "explanation": "static 필드는 클래스에 하나만 존재하므로 객체별 값을 저장하는 용도에 맞지 않는다.",
-      "analysis": "객체별 상태는 인스턴스 필드로 설계해야 한다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. static 메서드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q41",
-      "question": "다음 중 static 메서드 설계에 적절한 사례는 무엇인가?",
+      "question": "Java에서 static을 이해할 때 함께 구분해야 하는 개념은 무엇인가?",
       "choices": {
-        "A": "두 숫자를 받아 합계를 반환하는 계산 메서드",
-        "B": "특정 계좌 객체의 잔액을 직접 저장하는 필드",
-        "C": "학생 객체별 이름을 저장하는 필드",
-        "D": "객체별 상태를 출력하기 위해 this를 사용하는 메서드"
+        "A": "클래스 소속과 객체 소속",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "A",
-      "explanation": "입력값만으로 결과를 계산하는 기능은 static 메서드로 만들 수 있다.",
-      "analysis": "객체 상태에 의존하는 기능은 인스턴스 메서드가 더 적절하다."
+      "explanation": "정답은 A번이다. 클래스 소속과 객체 소속 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q42",
-      "question": "클래스 전체에서 공통으로 관리해야 하는 값은 어떤 멤버로 둘 수 있는가?",
+      "question": "static import를 초보 단계에서 과도하게 권장하지 않는 이유는 무엇인가?",
       "choices": {
-        "A": "지역변수",
-        "B": "매개변수",
-        "C": "static 필드",
-        "D": "주석"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "멤버가 어느 클래스에 소속되는지 파악하기 어려워질 수 있기 때문이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "C",
-      "explanation": "static 필드는 클래스 차원의 공유 값을 표현할 때 사용할 수 있다.",
-      "analysis": "다만 변경 가능한 공유 값은 관리 범위가 넓으므로 신중하게 사용해야 한다."
+      "answer": "B",
+      "explanation": "정답은 B번이다. 멤버가 어느 클래스에 소속되는지 파악하기 어려워질 수 있기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q43",
-      "question": "객체별로 다른 동작과 상태를 다루는 기능은 보통 무엇으로 작성하는가?",
+      "question": "Counter.count++가 의미하는 것으로 적절한 것은 무엇인가?",
       "choices": {
-        "A": "인스턴스 메서드",
-        "B": "static import",
-        "C": "패키지 선언",
-        "D": "주석 블록"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "Counter 클래스의 공유 count 값을 1 증가시킨다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "A",
-      "explanation": "인스턴스 메서드는 객체의 필드 값을 사용하거나 변경하는 기능에 적합하다.",
-      "analysis": "객체 상태와 연결된 동작은 객체를 통해 호출하는 구조가 자연스럽다."
+      "answer": "C",
+      "explanation": "정답은 C번이다. Counter 클래스의 공유 count 값을 1 증가시킨다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q44",
-      "question": "static 메서드에서 this를 사용할 수 없다는 사실이 의미하는 것은 무엇인가?",
+      "question": "new로 객체를 만들 때마다 따로 생기는 값은 무엇인가?",
       "choices": {
-        "A": "static 메서드는 특정 현재 객체와 연결되지 않는다.",
-        "B": "static 메서드는 반드시 문자열을 반환한다.",
-        "C": "static 메서드는 항상 private이다.",
-        "D": "static 메서드는 컴파일되지 않는다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "인스턴스 필드"
       },
-      "answer": "A",
-      "explanation": "this는 현재 객체를 의미하므로 static 메서드의 실행 문맥과 맞지 않는다.",
-      "analysis": "이 차이를 통해 static 메서드와 인스턴스 메서드의 역할을 구분할 수 있다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인스턴스 필드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q45",
-      "question": "다음 중 static 필드의 특징으로 옳은 것은 무엇인가?",
+      "question": "객체 생성 여부와 무관하게 접근 가능한 멤버는 무엇인가?",
       "choices": {
-        "A": "항상 객체마다 독립된 값을 가진다.",
-        "B": "클래스 이름으로 접근하는 것이 의미상 명확하다.",
-        "C": "조건식 안에서만 선언할 수 있다.",
-        "D": "메서드 안에서만 사용할 수 있다."
+        "A": "static 멤버",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "B",
-      "explanation": "static 필드는 클래스에 소속되므로 클래스 이름으로 접근하는 방식이 적절하다.",
-      "analysis": "객체 참조로 접근하면 static의 소속을 오해할 수 있다."
+      "answer": "A",
+      "explanation": "정답은 A번이다. static 멤버 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q46",
-      "question": "static final 상수를 사용하는 주된 이유는 무엇인가?",
+      "question": "static 메서드 내부에서 this를 사용할 수 없는 이유는 무엇인가?",
       "choices": {
-        "A": "객체마다 값을 무작위로 바꾸기 위해서",
-        "B": "공통 기준값을 한 곳에서 변경 불가능하게 관리하기 위해서",
-        "C": "반복문을 자동 생성하기 위해서",
-        "D": "클래스 이름을 숨기기 위해서"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "현재 객체가 없을 수 있기 때문이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "B",
-      "explanation": "static final은 공유되는 불변 값을 표현한다.",
-      "analysis": "상수를 사용하면 코드 안에 의미 없는 숫자나 문자열을 반복해서 쓰는 것을 줄일 수 있다."
+      "explanation": "정답은 B번이다. 현재 객체가 없을 수 있기 때문이다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q47",
-      "question": "다음 중 static 사용 판단 기준으로 적절한 질문은 무엇인가?",
+      "question": "공통 기능만 모아 둔 클래스에서 자주 사용되는 메서드 형태는 무엇인가?",
       "choices": {
-        "A": "이 값이 한글인가 영어인가?",
-        "B": "이 값이 특정 객체의 개별 상태인가, 클래스 전체의 공통 정보인가?",
-        "C": "이 파일이 이미지인가?",
-        "D": "이 코드가 몇 줄인가?"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "static 메서드",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "B",
-      "explanation": "static 사용 여부는 값이나 기능의 소속을 기준으로 판단해야 한다.",
-      "analysis": "개별 객체 상태라면 인스턴스 멤버, 클래스 공통 정보라면 static 멤버를 고려할 수 있다."
+      "answer": "C",
+      "explanation": "정답은 C번이다. static 메서드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q48",
-      "question": "static 메서드가 인스턴스 필드에 직접 접근하지 못하는 제한은 무엇을 방지하는 데 도움이 되는가?",
+      "question": "인스턴스 필드와 static 필드 중 객체별 상태를 표현하는 것은 무엇인가?",
       "choices": {
-        "A": "객체가 없는 상태에서 객체별 값을 사용하는 혼란",
-        "B": "문자열 출력",
-        "C": "세미콜론 사용",
-        "D": "클래스 선언"
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "C": "항상 객체마다 별도로 생성되는 지역 변수이다.",
+        "D": "인스턴스 필드"
       },
-      "answer": "A",
-      "explanation": "인스턴스 필드는 특정 객체에 속하므로 객체 없이 접근하면 의미가 불명확하다.",
-      "analysis": "이 제한은 클래스 소속 멤버와 객체 소속 멤버를 구분하게 만든다."
+      "answer": "D",
+      "explanation": "정답은 D번이다. 인스턴스 필드 static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q49",
-      "question": "다음 중 static 단원의 핵심 이해로 가장 적절한 것은 무엇인가?",
+      "question": "static을 사용할지 판단하는 기준으로 가장 적절한 것은 무엇인가?",
       "choices": {
-        "A": "static은 클래스 소속이고 인스턴스 멤버는 객체 소속이다.",
-        "B": "static은 반복문을 만드는 키워드다.",
-        "C": "static은 반드시 오류를 발생시킨다.",
-        "D": "static은 문자열 출력 전용 문법이다."
+        "A": "객체마다 달라야 하는 값인지 모든 객체가 공유해야 하는 값인지 확인한다.",
+        "B": "조건식이 true일 때만 실행되는 블록이다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
       "answer": "A",
-      "explanation": "static을 이해하는 핵심은 클래스 소속과 객체 소속의 차이를 구분하는 것이다.",
-      "analysis": "이 구분이 명확하면 static 필드, static 메서드, main 메서드의 구조를 일관되게 이해할 수 있다."
+      "explanation": "정답은 A번이다. 객체마다 달라야 하는 값인지 모든 객체가 공유해야 하는 값인지 확인한다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     },
     {
       "id": "static-members-q50",
-      "question": "static을 사용할 때 가장 주의해야 할 점은 무엇인가?",
+      "question": "static 단원의 핵심 이해로 가장 적절한 것은 무엇인가?",
       "choices": {
-        "A": "모든 필드에 무조건 static을 붙인다.",
-        "B": "모든 메서드에서 this를 사용한다.",
-        "C": "상수 이름을 항상 소문자로만 쓴다.",
-        "D": "공유 상태가 불필요하게 많아지지 않도록 한다."
+        "A": "조건식이 true일 때만 실행되는 블록이다.",
+        "B": "static은 클래스 소속 멤버를 만들고 인스턴스 멤버는 객체 소속 멤버를 만든다.",
+        "C": "반복문의 횟수를 자동으로 계산하는 키워드이다.",
+        "D": "항상 객체마다 별도로 생성되는 지역 변수이다."
       },
-      "answer": "D",
-      "explanation": "변경 가능한 static 필드는 프로그램 전체에서 공유되므로 관리가 어려워질 수 있다.",
-      "analysis": "static은 편리하지만 목적이 분명한 경우에 제한적으로 사용해야 한다."
+      "answer": "B",
+      "explanation": "정답은 B번이다. static은 클래스 소속 멤버를 만들고 인스턴스 멤버는 객체 소속 멤버를 만든다. static 단원에서는 객체마다 따로 존재하는 인스턴스 멤버와 클래스 수준에서 공유되는 static 멤버를 구분하는 것이 핵심이다.",
+      "analysis": "이 문항은 static을 단순히 객체 없이 호출하는 문법으로만 외우는지, 아니면 값과 기능의 소속이 객체인지 클래스인지 구분할 수 있는지를 확인한다. static은 공유 상태와 공통 기능을 표현할 때 유용하지만, 객체마다 달라야 하는 상태에 사용하면 설계 오류가 발생할 수 있다."
     }
   ],
   "analysisGuide": {
-    "excellent": "45문항 이상 정답이면 static과 인스턴스의 소속 차이, static 필드와 static 메서드의 사용 기준, static final 상수의 의미를 안정적으로 이해한 수준이다. 이후 상속과 다형성을 학습할 때도 클래스 차원의 멤버와 객체 차원의 멤버를 구분하면서 코드를 읽을 수 있다.",
-    "good": "35문항 이상 44문항 이하 정답이면 기본 개념은 이해했지만 static 메서드에서 인스턴스 멤버에 직접 접근할 수 없는 이유, this와 static의 관계, 변경 가능한 static 필드의 위험성을 추가로 복습할 필요가 있다.",
-    "needsReview": "25문항 이상 34문항 이하 정답이면 static을 단순히 객체 없이 쓰는 편의 문법으로만 이해하고 있을 가능성이 있다. static의 핵심은 클래스 소속이라는 점이며, 인스턴스 멤버는 객체 소속이라는 기준을 중심으로 다시 정리해야 한다.",
-    "retry": "24문항 이하 정답이면 static 필드, static 메서드, 인스턴스 필드, 인스턴스 메서드의 차이를 먼저 다시 학습해야 한다. 특히 main 메서드가 static인 이유와 static 메서드에서 this를 사용할 수 없는 이유를 예제 코드로 반복 확인하는 것이 필요하다."
+    "excellent": "45문항 이상 정답이면 static과 인스턴스의 차이, 클래스 소속 멤버와 객체 소속 멤버의 구분, static 필드와 static 메서드의 사용 기준을 안정적으로 이해한 수준이다.",
+    "good": "35문항 이상 정답이면 static의 기본 개념은 이해했으나 static 메서드에서 인스턴스 멤버를 직접 사용할 수 없는 이유, static final 상수, static 남용 문제를 추가로 복습할 필요가 있다.",
+    "needsReview": "35문항 미만이면 static을 객체 생성 없이 사용하는 편의 문법으로만 이해했을 가능성이 크다. 인스턴스 필드는 객체마다 존재하고 static 필드는 클래스 수준에서 공유된다는 차이를 먼저 다시 정리해야 한다."
   }
 }
