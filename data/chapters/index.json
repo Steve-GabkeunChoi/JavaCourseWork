@@ -5,6 +5,7 @@
     { "file": "conditions.json" },
     { "file": "loops.json" },
     { "file": "classes.json" },
-    { "file": "constructors.json" }
+    { "file": "constructors.json" },
+    { "file": "encapsulation.json" }
   ]
 }
