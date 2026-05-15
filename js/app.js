@@ -118,21 +118,54 @@ function selectChapter(chapterId) {
 }
 
 function renderLecture(chapter) {
-  const lecture = chapter.lecture;
-  const sectionsHtml = lecture.sections.map((section) => `
-    <h4>${escapeHtml(section.heading)}</h4>
-    ${section.paragraphs.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
-  `).join('');
+  const lecture = chapter.lecture || {};
+  const sections = Array.isArray(lecture.sections) ? lecture.sections : [];
+  const examples = Array.isArray(lecture.examples) ? lecture.examples : [];
 
-  const codeHtml = lecture.examples.map((example) => `
-    <h4>${escapeHtml(example.title)}</h4>
-    <pre><code>${escapeHtml(example.code)}</code></pre>
-  `).join('');
+  const sectionsHtml = sections.map((section) => {
+    const paragraphs = Array.isArray(section.paragraphs) ? section.paragraphs : [];
+    const sectionCodeExamples = Array.isArray(section.codeExamples) ? section.codeExamples : [];
+
+    const paragraphHtml = paragraphs
+      .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+      .join('');
+
+    const sectionCodeHtml = sectionCodeExamples
+      .map((example) => renderCodeExample(example))
+      .join('');
+
+    return `
+      <section class="lecture-section">
+        <h4>${escapeHtml(section.heading || '강의 내용')}</h4>
+        ${paragraphHtml}
+        ${sectionCodeHtml}
+      </section>
+    `;
+  }).join('');
+
+  const examplesHtml = examples
+    .map((example) => renderCodeExample(example))
+    .join('');
 
   els.lectureContent.innerHTML = `
     <h3>${escapeHtml(chapter.title)}</h3>
     ${sectionsHtml}
-    ${codeHtml}
+    ${examplesHtml}
+  `;
+}
+
+function renderCodeExample(example) {
+  if (!example || !example.code) {
+    return '';
+  }
+
+  const title = example.title ? `<h4>${escapeHtml(example.title)}</h4>` : '';
+
+  return `
+    <div class="code-example">
+      ${title}
+      <pre><code>${escapeHtml(example.code)}</code></pre>
+    </div>
   `;
 }
 
@@ -211,7 +244,8 @@ function renderAnalysis() {
           <h4>문제 ${index + 1}. ${escapeHtml(item.question.question)}</h4>
           <p>내 답안: ${escapeHtml(userAnswerText)}</p>
           <p>정답: ${escapeHtml(correctAnswerText)}</p>
-          <p>해설: ${escapeHtml(item.question.explanation)}</p>
+          <p>해설: ${escapeHtml(item.question.explanation || '')}</p>
+          ${item.question.analysis ? `<p>분석: ${escapeHtml(item.question.analysis)}</p>` : ''}
         </div>
       `;
     }).join('')}
