@@ -1,0 +1,69 @@
+{
+  "id": "variables",
+  "order": 2,
+  "title": "변수와 자료형",
+  "summary": "값을 저장하는 변수와 Java의 기본 자료형을 이해한다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "변수의 의미",
+        "paragraphs": [
+          "변수는 프로그램 실행 중 사용할 값을 저장하는 이름 붙은 공간이다.",
+          "Java에서는 변수를 사용하기 전에 자료형과 이름을 선언해야 한다."
+        ]
+      },
+      {
+        "heading": "기본 자료형",
+        "paragraphs": [
+          "정수는 int, long 등을 사용하고 실수는 double, float 등을 사용한다.",
+          "문자 하나는 char, 참과 거짓은 boolean으로 표현한다.",
+          "문자열은 기본 자료형이 아니라 String 클래스를 사용한다."
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "변수 선언과 출력",
+        "code": "public class Main {\n    public static void main(String[] args) {\n        int age = 20;\n        double score = 87.5;\n        String name = \"Kim\";\n\n        System.out.println(name);\n        System.out.println(age);\n        System.out.println(score);\n    }\n}"
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "variables-q1",
+      "question": "정수를 저장하기 위해 가장 일반적으로 사용하는 Java 자료형은 무엇인가?",
+      "choices": {
+        "A": "int",
+        "B": "boolean",
+        "C": "char",
+        "D": "String"
+      },
+      "answer": "A",
+      "explanation": "int는 정수 값을 저장할 때 가장 일반적으로 사용하는 기본 자료형이다."
+    },
+    {
+      "id": "variables-q2",
+      "question": "참과 거짓을 저장하는 자료형은 무엇인가?",
+      "choices": {
+        "A": "double",
+        "B": "boolean",
+        "C": "long",
+        "D": "char"
+      },
+      "answer": "B",
+      "explanation": "boolean은 true 또는 false 값을 저장한다."
+    },
+    {
+      "id": "variables-q3",
+      "question": "문자열을 저장할 때 사용하는 것은 무엇인가?",
+      "choices": {
+        "A": "char",
+        "B": "int",
+        "C": "String",
+        "D": "boolean"
+      },
+      "answer": "C",
+      "explanation": "문자열은 여러 문자의 집합이며 Java에서는 String 클래스로 다룬다."
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id": "conditions",
+  "order": 3,
+  "title": "조건문",
+  "summary": "if, else if, else를 이용해 조건에 따라 실행 흐름을 나눈다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "조건문의 역할",
+        "paragraphs": [
+          "조건문은 조건식의 결과가 true인지 false인지에 따라 실행할 코드를 선택한다.",
+          "if는 첫 조건을 검사하고, else if는 추가 조건을 검사하며, else는 앞의 조건이 모두 false일 때 실행된다."
+        ]
+      },
+      {
+        "heading": "조건식",
+        "paragraphs": [
+          "조건식은 반드시 boolean 결과를 만들어야 한다.",
+          "비교 연산자와 논리 연산자를 이용해 조건을 구성할 수 있다."
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "점수에 따른 등급 출력",
+        "code": "public class Main {\n    public static void main(String[] args) {\n        int score = 85;\n\n        if (score >= 90) {\n            System.out.println(\"A\");\n        } else if (score >= 80) {\n            System.out.println(\"B\");\n        } else {\n            System.out.println(\"C\");\n        }\n    }\n}"
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "conditions-q1",
+      "question": "if 문의 조건식 결과로 올바른 것은 무엇인가?",
+      "choices": {
+        "A": "문자열",
+        "B": "배열",
+        "C": "boolean 값",
+        "D": "클래스 이름"
+      },
+      "answer": "C",
+      "explanation": "if 문의 조건식은 true 또는 false가 되는 boolean 결과를 가져야 한다."
+    },
+    {
+      "id": "conditions-q2",
+      "question": "앞의 모든 조건이 false일 때 실행되는 블록은 무엇인가?",
+      "choices": {
+        "A": "else",
+        "B": "class",
+        "C": "main",
+        "D": "import"
+      },
+      "answer": "A",
+      "explanation": "else 블록은 if와 else if 조건이 모두 false일 때 실행된다."
+    },
+    {
+      "id": "conditions-q3",
+      "question": "두 조건을 모두 만족해야 할 때 사용하는 논리 연산자는 무엇인가?",
+      "choices": {
+        "A": "||",
+        "B": "&&",
+        "C": "++",
+        "D": "=="
+      },
+      "answer": "B",
+      "explanation": "&&는 AND 연산자이며 양쪽 조건이 모두 true일 때 true가 된다."
+    }
+  ]
+}

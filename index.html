@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java 문법 강의 및 객관식 평가</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Java 문법</h1>
+        <p>JSON 모듈 기반 강의·문제풀이·채점</p>
+      </div>
+
+      <section class="panel">
+        <h2>챕터 목록</h2>
+        <p class="hint">data/chapters/index.json에 등록된 JSON 모듈을 자동으로 불러옵니다.</p>
+        <div id="chapterList" class="chapter-list"></div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Java Grammar Quiz App</p>
+          <h2 id="chapterTitle">챕터 로딩 중</h2>
+          <p id="chapterSummary" class="summary">JSON 모듈을 읽어 챕터명을 기준으로 메뉴를 구성합니다.</p>
+        </div>
+        <div class="status-box">
+          <span>로드 상태</span>
+          <strong id="loadStatus">준비 중</strong>
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="학습 탭">
+        <button class="tab active" data-tab="lecture">강의</button>
+        <button class="tab" data-tab="quiz">문제풀이</button>
+        <button class="tab" data-tab="analysis">채점 및 분석</button>
+      </nav>
+
+      <section id="lecturePanel" class="tab-panel active">
+        <article id="lectureContent" class="content-card"></article>
+      </section>
+
+      <section id="quizPanel" class="tab-panel">
+        <form id="quizForm" class="quiz-form"></form>
+        <div class="actions">
+          <button id="gradeBtn" type="button" class="primary">채점하기</button>
+          <button id="resetBtn" type="button" class="secondary">답안 초기화</button>
+        </div>
+      </section>
+
+      <section id="analysisPanel" class="tab-panel">
+        <div id="analysisContent" class="content-card empty-state">
+          문제를 풀고 채점하면 결과와 정답 해설이 표시됩니다.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

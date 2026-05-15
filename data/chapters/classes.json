@@ -1,0 +1,68 @@
+{
+  "id": "classes",
+  "order": 5,
+  "title": "클래스와 객체",
+  "summary": "클래스를 정의하고 객체를 생성해 필드와 메서드를 사용하는 방법을 이해한다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "클래스",
+        "paragraphs": [
+          "클래스는 객체를 만들기 위한 설계도 역할을 한다.",
+          "클래스에는 객체가 가질 데이터인 필드와 객체가 수행할 동작인 메서드를 작성할 수 있다."
+        ]
+      },
+      {
+        "heading": "객체",
+        "paragraphs": [
+          "객체는 클래스를 바탕으로 메모리에 생성된 실제 사용 대상이다.",
+          "new 키워드를 사용해 객체를 생성하고, 점 연산자로 필드와 메서드에 접근한다."
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "클래스와 객체 사용",
+        "code": "class Student {\n    String name;\n\n    void introduce() {\n        System.out.println(\"이름: \" + name);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Student student = new Student();\n        student.name = \"Kim\";\n        student.introduce();\n    }\n}"
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "classes-q1",
+      "question": "클래스에 대한 설명으로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "객체를 만들기 위한 설계도이다.",
+        "B": "조건을 검사하는 연산자이다.",
+        "C": "정수만 저장하는 자료형이다.",
+        "D": "반복문을 종료하는 명령이다."
+      },
+      "answer": "A",
+      "explanation": "클래스는 객체가 가질 속성과 동작을 정의하는 설계도 역할을 한다."
+    },
+    {
+      "id": "classes-q2",
+      "question": "객체를 생성할 때 사용하는 키워드는 무엇인가?",
+      "choices": {
+        "A": "if",
+        "B": "new",
+        "C": "for",
+        "D": "void"
+      },
+      "answer": "B",
+      "explanation": "new 키워드는 클래스를 바탕으로 객체를 생성할 때 사용한다."
+    },
+    {
+      "id": "classes-q3",
+      "question": "객체의 동작을 표현하기 위해 클래스 안에 작성하는 것은 무엇인가?",
+      "choices": {
+        "A": "메서드",
+        "B": "패키지",
+        "C": "주석",
+        "D": "파일명"
+      },
+      "answer": "A",
+      "explanation": "메서드는 객체가 수행할 기능이나 동작을 코드로 정의한 것이다."
+    }
+  ]
+}

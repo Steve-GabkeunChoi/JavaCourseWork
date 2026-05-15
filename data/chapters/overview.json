@@ -1,0 +1,69 @@
+{
+  "id": "overview",
+  "order": 1,
+  "title": "개요",
+  "summary": "Java 언어의 특징, 실행 구조, 기본 프로그램 구성을 이해한다.",
+  "lecture": {
+    "sections": [
+      {
+        "heading": "Java의 특징",
+        "paragraphs": [
+          "Java는 객체 지향 프로그래밍 언어이며 클래스와 객체를 중심으로 프로그램을 구성한다.",
+          "Java 소스 파일은 컴파일 과정을 거쳐 바이트코드로 변환되고, JVM이 이 바이트코드를 실행한다.",
+          "운영체제마다 JVM이 제공되므로 동일한 Java 프로그램을 여러 환경에서 실행할 수 있다."
+        ]
+      },
+      {
+        "heading": "main 메서드",
+        "paragraphs": [
+          "Java 프로그램은 일반적으로 main 메서드에서 실행을 시작한다.",
+          "public static void main(String[] args)는 JVM이 프로그램 시작점으로 인식하는 표준 형태다."
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "title": "기본 출력 프로그램",
+        "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello Java\");\n    }\n}"
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "overview-q1",
+      "question": "Java 프로그램의 일반적인 실행 시작점은 무엇인가?",
+      "choices": {
+        "A": "print 메서드",
+        "B": "main 메서드",
+        "C": "class 키워드",
+        "D": "package 선언"
+      },
+      "answer": "B",
+      "explanation": "Java 프로그램은 일반적으로 public static void main(String[] args) 메서드에서 실행을 시작한다."
+    },
+    {
+      "id": "overview-q2",
+      "question": "Java 소스 코드가 컴파일되면 주로 어떤 형태로 변환되는가?",
+      "choices": {
+        "A": "HTML",
+        "B": "바이트코드",
+        "C": "이미지 파일",
+        "D": "SQL 문장"
+      },
+      "answer": "B",
+      "explanation": "Java 컴파일러는 .java 파일을 JVM이 실행할 수 있는 바이트코드로 변환한다."
+    },
+    {
+      "id": "overview-q3",
+      "question": "JVM의 역할로 가장 적절한 것은 무엇인가?",
+      "choices": {
+        "A": "Java 바이트코드를 실행한다.",
+        "B": "데이터베이스 테이블을 생성한다.",
+        "C": "웹 브라우저 화면을 디자인한다.",
+        "D": "이미지 파일을 압축한다."
+      },
+      "answer": "A",
+      "explanation": "JVM은 Java Virtual Machine이며 Java 바이트코드를 실행하는 환경이다."
+    }
+  ]
+}

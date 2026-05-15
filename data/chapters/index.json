@@ -1,0 +1,9 @@
+{
+  "modules": [
+    { "file": "overview.json" },
+    { "file": "variables.json" },
+    { "file": "conditions.json" },
+    { "file": "loops.json" },
+    { "file": "classes.json" }
+  ]
+}
