@@ -127,7 +127,7 @@ function renderLecture(chapter) {
     const sectionCodeExamples = Array.isArray(section.codeExamples) ? section.codeExamples : [];
 
     const paragraphHtml = paragraphs
-      .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+      .map((paragraph) => renderParagraphWithOptionalCode(paragraph))
       .join('');
 
     const sectionCodeHtml = sectionCodeExamples
@@ -152,6 +152,47 @@ function renderLecture(chapter) {
     ${sectionsHtml}
     ${examplesHtml}
   `;
+}
+
+function renderParagraphWithOptionalCode(paragraph) {
+  const text = String(paragraph ?? '');
+
+  if (!text.includes('```')) {
+    return `<p>${escapeHtml(text)}</p>`;
+  }
+
+  const parts = [];
+  const codeBlockPattern = /```([a-zA-Z0-9_-]*)\s*([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = codeBlockPattern.exec(text)) !== null) {
+    const beforeText = text.slice(lastIndex, match.index).trim();
+    const language = match[1] ? match[1].trim() : '';
+    const code = match[2] ? match[2].trim() : '';
+
+    if (beforeText) {
+      parts.push(`<p>${escapeHtml(beforeText)}</p>`);
+    }
+
+    if (code) {
+      parts.push(`
+        <div class="code-example inline-code-example">
+          ${language ? `<div class="code-label">${escapeHtml(language)}</div>` : ''}
+          <pre><code>${escapeHtml(code)}</code></pre>
+        </div>
+      `);
+    }
+
+    lastIndex = codeBlockPattern.lastIndex;
+  }
+
+  const afterText = text.slice(lastIndex).trim();
+  if (afterText) {
+    parts.push(`<p>${escapeHtml(afterText)}</p>`);
+  }
+
+  return parts.join('');
 }
 
 function renderCodeExample(example) {
