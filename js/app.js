@@ -79,6 +79,10 @@ function validateChapter(chapter, fileName) {
     }
   }
 
+  if (!chapter.lecture || !Array.isArray(chapter.lecture.sections)) {
+    throw new Error(`${fileName} 파일의 lecture.sections는 배열이어야 합니다.`);
+  }
+
   if (!Array.isArray(chapter.questions)) {
     throw new Error(`${fileName} 파일의 questions는 배열이어야 합니다.`);
   }
@@ -120,17 +124,16 @@ function selectChapter(chapterId) {
 function renderLecture(chapter) {
   const lecture = chapter.lecture || {};
   const sections = Array.isArray(lecture.sections) ? lecture.sections : [];
-  const examples = Array.isArray(lecture.examples) ? lecture.examples : [];
 
   const sectionsHtml = sections.map((section) => {
     const paragraphs = Array.isArray(section.paragraphs) ? section.paragraphs : [];
-    const sectionCodeExamples = Array.isArray(section.codeExamples) ? section.codeExamples : [];
+    const examples = collectSectionExamples(section);
 
     const paragraphHtml = paragraphs
-      .map((paragraph) => renderParagraphWithOptionalCode(paragraph))
+      .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
       .join('');
 
-    const sectionCodeHtml = sectionCodeExamples
+    const exampleHtml = examples
       .map((example) => renderCodeExample(example))
       .join('');
 
@@ -138,61 +141,40 @@ function renderLecture(chapter) {
       <section class="lecture-section">
         <h4>${escapeHtml(section.heading || '강의 내용')}</h4>
         ${paragraphHtml}
-        ${sectionCodeHtml}
+        ${exampleHtml}
       </section>
     `;
   }).join('');
 
-  const examplesHtml = examples
-    .map((example) => renderCodeExample(example))
-    .join('');
+  const legacyExamples = Array.isArray(lecture.examples) ? lecture.examples : [];
+  const legacyExamplesHtml = legacyExamples.length > 0
+    ? `
+      <section class="lecture-section">
+        <h4>추가 예제</h4>
+        ${legacyExamples.map((example) => renderCodeExample(example)).join('')}
+      </section>
+    `
+    : '';
 
   els.lectureContent.innerHTML = `
     <h3>${escapeHtml(chapter.title)}</h3>
     ${sectionsHtml}
-    ${examplesHtml}
+    ${legacyExamplesHtml}
   `;
 }
 
-function renderParagraphWithOptionalCode(paragraph) {
-  const text = String(paragraph ?? '');
+function collectSectionExamples(section) {
+  const examples = [];
 
-  if (!text.includes('```')) {
-    return `<p>${escapeHtml(text)}</p>`;
+  if (Array.isArray(section.examples)) {
+    examples.push(...section.examples);
   }
 
-  const parts = [];
-  const codeBlockPattern = /```([a-zA-Z0-9_-]*)\s*([\s\S]*?)```/g;
-  let lastIndex = 0;
-  let match;
-
-  while ((match = codeBlockPattern.exec(text)) !== null) {
-    const beforeText = text.slice(lastIndex, match.index).trim();
-    const language = match[1] ? match[1].trim() : '';
-    const code = match[2] ? match[2].trim() : '';
-
-    if (beforeText) {
-      parts.push(`<p>${escapeHtml(beforeText)}</p>`);
-    }
-
-    if (code) {
-      parts.push(`
-        <div class="code-example inline-code-example">
-          ${language ? `<div class="code-label">${escapeHtml(language)}</div>` : ''}
-          <pre><code>${escapeHtml(code)}</code></pre>
-        </div>
-      `);
-    }
-
-    lastIndex = codeBlockPattern.lastIndex;
+  if (Array.isArray(section.codeExamples)) {
+    examples.push(...section.codeExamples);
   }
 
-  const afterText = text.slice(lastIndex).trim();
-  if (afterText) {
-    parts.push(`<p>${escapeHtml(afterText)}</p>`);
-  }
-
-  return parts.join('');
+  return examples.filter((example) => example && example.code);
 }
 
 function renderCodeExample(example) {
@@ -200,7 +182,7 @@ function renderCodeExample(example) {
     return '';
   }
 
-  const title = example.title ? `<h4>${escapeHtml(example.title)}</h4>` : '';
+  const title = example.title ? `<div class="code-title">${escapeHtml(example.title)}</div>` : '';
 
   return `
     <div class="code-example">
@@ -270,6 +252,9 @@ function renderAnalysis() {
     return;
   }
 
+  const chapter = state.selectedChapter;
+  const guideHtml = renderAnalysisGuide(chapter);
+
   els.analysisContent.className = 'content-card';
   els.analysisContent.innerHTML = `
     <div class="result-summary">
@@ -277,6 +262,7 @@ function renderAnalysis() {
       <p>총 ${result.total}문항 중 <strong>${result.correctCount}문항</strong> 정답입니다.</p>
       <p>점수: <strong>${result.score}점</strong></p>
     </div>
+    ${guideHtml}
     ${result.details.map((item, index) => {
       const userAnswerText = item.userAnswer ? `${item.userAnswer}. ${item.question.choices[item.userAnswer]}` : '미응답';
       const correctAnswerText = `${item.question.answer}. ${item.question.choices[item.question.answer]}`;
@@ -293,10 +279,70 @@ function renderAnalysis() {
   `;
 }
 
+function renderAnalysisGuide(chapter) {
+  if (!chapter || !chapter.analysisGuide) {
+    return '';
+  }
+
+  const guide = chapter.analysisGuide;
+
+  if (typeof guide === 'string') {
+    return `
+      <div class="analysis-guide">
+        <h3>학습 분석 기준</h3>
+        <p>${escapeHtml(guide)}</p>
+      </div>
+    `;
+  }
+
+  if (Array.isArray(guide)) {
+    return `
+      <div class="analysis-guide">
+        <h3>학습 분석 기준</h3>
+        ${guide.map((item) => `<p>${escapeHtml(item)}</p>`).join('')}
+      </div>
+    `;
+  }
+
+  if (typeof guide === 'object') {
+    const parts = [];
+    for (const [key, value] of Object.entries(guide)) {
+      if (Array.isArray(value)) {
+        parts.push(`
+          <h4>${escapeHtml(key)}</h4>
+          ${value.map((item) => `<p>${escapeHtml(item)}</p>`).join('')}
+        `);
+      } else {
+        parts.push(`
+          <h4>${escapeHtml(key)}</h4>
+          <p>${escapeHtml(value)}</p>
+        `);
+      }
+    }
+
+    return `
+      <div class="analysis-guide">
+        <h3>학습 분석 기준</h3>
+        ${parts.join('')}
+      </div>
+    `;
+  }
+
+  return '';
+}
+
 function resetAnswers() {
   state.selectedAnswers = {};
   state.lastResult = null;
-  els.quizForm.reset();
+
+  if (typeof els.quizForm.reset === 'function') {
+    els.quizForm.reset();
+  } else {
+    els.quizForm.querySelectorAll('input[type="radio"]').forEach((input) => {
+      input.checked = false;
+    });
+  }
+
   renderEmptyAnalysis();
 }
 
@@ -318,7 +364,7 @@ function bindActions() {
 }
 
 function escapeHtml(value) {
-  return String(value)
+  return String(value ?? '')
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
